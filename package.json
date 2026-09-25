@@ -1,0 +1,10 @@
+{
+  "name": "development-trial",
+  "version": "1.0.0",
+  "scripts": {
+    "build:css": "tailwindcss -i ./src/tailwind.css -o ./assets/tailwind.css --watch"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.0"
+  }
+}
