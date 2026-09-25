@@ -199,9 +199,6 @@
     </slider-component>
 
     {%- if section.settings.show_view_all and more_in_collection -%}
-<div class="tw-flex tw-items-center tw-justify-center">
-  <div class="tw-bg-red-500  tw-pt-4 tw-pb-4 tw-pr-8 tw-pl-8">test</div>
-</div>
       <div class="center collection__view-all{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
         <a
           href="{{ section.settings.collection.url }}"
