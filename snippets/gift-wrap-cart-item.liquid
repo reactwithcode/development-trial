@@ -17,9 +17,15 @@
   assign to_id = field_id | append: '-to'
   assign from_id = field_id | append: '-from'
   assign message_id = field_id | append: '-message'
-  assign gift_to = gift_wrap_item.properties._gift_to
-  assign gift_from = gift_wrap_item.properties._gift_from
-  assign gift_message = gift_wrap_item.properties._gift_message
+  comment
+    Gift details are stored under visible property names; lines added before that change used _gift_* keys.
+  endcomment
+  assign property_to = 'gift_wrap.property_to' | t
+  assign property_from = 'gift_wrap.property_from' | t
+  assign property_message = 'gift_wrap.property_message' | t
+  assign gift_to = gift_wrap_item.properties[property_to] | default: gift_wrap_item.properties._gift_to
+  assign gift_from = gift_wrap_item.properties[property_from] | default: gift_wrap_item.properties._gift_from
+  assign gift_message = gift_wrap_item.properties[property_message] | default: gift_wrap_item.properties._gift_message
   assign link_button_classes = 'tw-relative tw-m-0 tw-cursor-pointer tw-border-0 tw-bg-transparent tw-p-0 tw-font-figma tw-text-figma-small tw-text-figma-ink after:tw-absolute after:-tw-inset-3'
 
   assign to_label = 'gift_wrap.to_label' | t
@@ -34,6 +40,9 @@
       class="tw-block tw-bg-figma-panel tw-px-4 tw-py-3"
       data-gift-wrap-key="{{ gift_wrap_item.key }}"
       data-parent-key="{{ item.key }}"
+      data-property-to="{{ 'gift_wrap.property_to' | t | escape }}"
+      data-property-from="{{ 'gift_wrap.property_from' | t | escape }}"
+      data-property-message="{{ 'gift_wrap.property_message' | t | escape }}"
       data-gift-to="{{ gift_to | escape }}"
       data-gift-from="{{ gift_from | escape }}"
       data-gift-message="{{ gift_message | escape }}"

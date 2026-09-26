@@ -29,6 +29,18 @@
   {%- if pre_gift_wrap_item != nil -%}{%- break -%}{%- endif -%}
 {%- endfor -%}
 
+{%- liquid
+  comment
+    Gift details are stored under visible property names; lines added before that change used _gift_* keys.
+  endcomment
+  assign property_to = 'gift_wrap.property_to' | t
+  assign property_from = 'gift_wrap.property_from' | t
+  assign property_message = 'gift_wrap.property_message' | t
+  assign pre_gift_to = pre_gift_wrap_item.properties[property_to] | default: pre_gift_wrap_item.properties._gift_to
+  assign pre_gift_from = pre_gift_wrap_item.properties[property_from] | default: pre_gift_wrap_item.properties._gift_from
+  assign pre_gift_message = pre_gift_wrap_item.properties[property_message] | default: pre_gift_wrap_item.properties._gift_message
+-%}
+
 {%- assign checkbox_icon_classes = 'tw-flex tw-h-5 tw-w-5 tw-shrink-0 tw-rounded peer-focus-visible:tw-outline peer-focus-visible:tw-outline-2 peer-focus-visible:tw-outline-offset-2 peer-focus-visible:tw-outline-foreground/50' -%}
 
 <gift-wrap-pdp
@@ -36,6 +48,9 @@
   data-stack-gap="4"
   data-product-handle="{{ settings.gift_wrap_product_handle | escape }}"
   data-unavailable-message="{{ 'gift_wrap.unavailable' | t | escape }}"
+  data-property-to="{{ 'gift_wrap.property_to' | t | escape }}"
+  data-property-from="{{ 'gift_wrap.property_from' | t | escape }}"
+  data-property-message="{{ 'gift_wrap.property_message' | t | escape }}"
   {% if pre_gift_wrap_item != nil %}
     data-pre-checked="true"
   {% endif %}
@@ -75,21 +90,21 @@
       {%- render 'gift-wrap-field',
         id: 'gift-wrap-to',
         label: gift_wrap_to_label,
-        value: pre_gift_wrap_item.properties._gift_to,
+        value: pre_gift_to,
         placeholder: gift_wrap_to_placeholder,
         maxlength: settings.gift_wrap_char_limit_to
       -%}
       {%- render 'gift-wrap-field',
         id: 'gift-wrap-from',
         label: gift_wrap_from_label,
-        value: pre_gift_wrap_item.properties._gift_from,
+        value: pre_gift_from,
         placeholder: gift_wrap_from_placeholder,
         maxlength: settings.gift_wrap_char_limit_from
       -%}
       {%- render 'gift-wrap-field',
         id: 'gift-wrap-message',
         label: gift_wrap_message_label,
-        value: pre_gift_wrap_item.properties._gift_message,
+        value: pre_gift_message,
         placeholder: gift_wrap_message_placeholder,
         maxlength: settings.gift_wrap_char_limit_message,
         multiline: true,

@@ -576,6 +576,9 @@
     "update": "Update",
     "update_label": "Update gift message",
     "update_error": "Something went wrong. Please try again.",
-    "unavailable": "Gift wrapping is currently unavailable"
+    "unavailable": "Gift wrapping is currently unavailable",
+    "property_to": "To",
+    "property_from": "From",
+    "property_message": "Gift message"
   }
 }

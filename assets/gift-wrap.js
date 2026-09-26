@@ -1,4 +1,16 @@
 {
+  // Gift details use visible property names ("To", "From", "Gift message") so they show at checkout,
+  // on the order and in notifications. Only _parent_key stays private (underscore = hidden by Shopify).
+  // Empty To/From are left out rather than shown blank.
+  const buildGiftProperties = ({ propertyTo, propertyFrom, propertyMessage }, { to, from, message, parentKey }) => {
+    const properties = {};
+    if (to) properties[propertyTo] = to;
+    if (from) properties[propertyFrom] = from;
+    if (message) properties[propertyMessage] = message;
+    properties._parent_key = parentKey;
+    return properties;
+  };
+
   // Shared by both components: updates the live "count / limit" next to a gift wrap field.
   const updateGiftWrapCounter = (input) => {
     const counter = input.closest('[data-gift-wrap-field]')?.querySelector('[data-gift-wrap-counter]');
@@ -147,12 +159,12 @@
                   {
                     id: this.giftWrapVariantId,
                     quantity: 1,
-                    properties: {
-                      _gift_to: this.toInput.value.trim(),
-                      _gift_from: this.fromInput.value.trim(),
-                      _gift_message: message,
-                      _parent_key: parentKey,
-                    },
+                    properties: buildGiftProperties(this.dataset, {
+                      to: this.toInput.value.trim(),
+                      from: this.fromInput.value.trim(),
+                      message,
+                      parentKey,
+                    }),
                   },
                 ],
               }),
@@ -307,12 +319,12 @@
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
                 id: this.dataset.giftWrapKey,
-                properties: {
-                  _gift_to: this.toInput?.value.trim() || '',
-                  _gift_from: this.fromInput?.value.trim() || '',
-                  _gift_message: this.messageInput?.value.trim() || '',
-                  _parent_key: this.dataset.parentKey,
-                },
+                properties: buildGiftProperties(this.dataset, {
+                  to: this.toInput?.value.trim(),
+                  from: this.fromInput?.value.trim(),
+                  message: this.messageInput?.value.trim(),
+                  parentKey: this.dataset.parentKey,
+                }),
               }),
             });
 
