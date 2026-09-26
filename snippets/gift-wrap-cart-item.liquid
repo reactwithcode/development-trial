@@ -1,0 +1,138 @@
+{% comment %}
+  Gift Wrap Cart Item
+
+  Renders a gift wrap row below a cart item in the cart drawer. Shows a summary
+  of the gift message with an Edit button that expands an inline form for updating.
+
+  Accepts:
+  - item: {Object} - The parent cart line item
+  - gift_wrap_item: {Object} - The Gift Wrap cart line item linked to this item
+
+  Usage:
+  {% render 'gift-wrap-cart-item', item: item, gift_wrap_item: gift_wrap_item %}
+{% endcomment %}
+
+{%- liquid
+  assign field_id = 'GiftWrapCart-' | append: gift_wrap_item.key | replace: ':', '-'
+  assign to_id = field_id | append: '-to'
+  assign from_id = field_id | append: '-from'
+  assign message_id = field_id | append: '-message'
+  comment
+    Gift details are stored under visible property names; lines added before that change used _gift_* keys.
+  endcomment
+  assign property_to = 'gift_wrap.property_to' | t
+  assign property_from = 'gift_wrap.property_from' | t
+  assign property_message = 'gift_wrap.property_message' | t
+  assign gift_to = gift_wrap_item.properties[property_to] | default: gift_wrap_item.properties._gift_to
+  assign gift_from = gift_wrap_item.properties[property_from] | default: gift_wrap_item.properties._gift_from
+  assign gift_message = gift_wrap_item.properties[property_message] | default: gift_wrap_item.properties._gift_message
+  assign link_button_classes = 'tw-relative tw-m-0 tw-cursor-pointer tw-border-0 tw-bg-transparent tw-p-0 tw-font-figma tw-text-figma-small tw-text-figma-ink after:tw-absolute after:-tw-inset-3'
+
+  assign to_label = 'gift_wrap.to_label' | t
+  assign from_label = 'gift_wrap.from_label' | t
+  assign message_label = 'gift_wrap.message_label' | t
+-%}
+
+{%- comment -%} Block display stops Dawn's .cart-item grid and table layout from squeezing the row into one column. {%- endcomment -%}
+<tr class="cart-item--gift-wrap tw-block">
+  <td colspan="3" class="tw-block" role="cell">
+    <gift-wrap-cart-item
+      class="tw-block tw-bg-figma-panel tw-px-4 tw-py-3"
+      data-gift-wrap-key="{{ gift_wrap_item.key }}"
+      data-parent-key="{{ item.key }}"
+      data-property-to="{{ 'gift_wrap.property_to' | t | escape }}"
+      data-property-from="{{ 'gift_wrap.property_from' | t | escape }}"
+      data-property-message="{{ 'gift_wrap.property_message' | t | escape }}"
+      data-gift-to="{{ gift_to | escape }}"
+      data-gift-from="{{ gift_from | escape }}"
+      data-gift-message="{{ gift_message | escape }}"
+    >
+      <div class="tw-flex tw-items-center tw-justify-between tw-gap-4">
+        <p class="tw-m-0 tw-flex tw-items-center tw-gap-2">
+          <span class="tw-flex tw-h-5 tw-w-5 tw-shrink-0">
+            {{- 'icon-checkbox-checked.svg' | inline_asset_content -}}
+          </span>
+          <span>{{ 'gift_wrap.checkbox_label' | t: price: settings.gift_wrap_price_label }}</span>
+        </p>
+
+        <button
+          type="button"
+          class="gift-wrap-cart-item__edit-btn {{ link_button_classes }}"
+          aria-label="{{ 'gift_wrap.edit_label' | t: title: item.product.title | escape }}"
+          aria-expanded="false"
+          aria-controls="{{ field_id }}-form"
+        >
+          <span class="tw-flex tw-items-center tw-gap-2">
+            <span class="tw-underline tw-underline-offset-4">{{ 'gift_wrap.edit' | t }}</span>
+            <span class="tw-flex tw-h-5 tw-w-5">{{- 'icon-edit.svg' | inline_asset_content -}}</span>
+          </span>
+        </button>
+
+        <button
+          type="button"
+          class="gift-wrap-cart-item__cancel-btn {{ link_button_classes }}"
+          aria-label="{{ 'gift_wrap.cancel_label' | t | escape }}"
+          hidden
+        >
+          <span class="tw-flex tw-items-center tw-gap-2">
+            <span class="tw-underline tw-underline-offset-4">{{ 'gift_wrap.cancel' | t }}</span>
+            <span class="tw-flex tw-h-5 tw-w-5">{{- 'icon-close-thin.svg' | inline_asset_content -}}</span>
+          </span>
+        </button>
+      </div>
+
+      <p class="gift-wrap-cart-item__summary tw-m-0 tw-mt-1 tw-text-figma-small tw-text-figma-muted">
+        {%- if gift_to != blank -%}
+          {{ 'gift_wrap.summary_to' | t: name: gift_to }}
+        {%- endif -%}
+        {%- if gift_from != blank -%}
+          {%- if gift_to != blank %} / {% endif -%}
+          {{ 'gift_wrap.summary_from' | t: name: gift_from }}
+        {%- endif -%}
+        {%- if gift_message != blank -%}
+          {%- if gift_to != blank or gift_from != blank %} / {% endif -%}
+          &ldquo;{{ gift_message }}&rdquo;
+        {%- endif -%}
+      </p>
+
+      <div id="{{ field_id }}-form" class="gift-wrap-cart-item__edit-form" hidden aria-hidden="true">
+        <div class="tw-flex tw-flex-col tw-gap-4 tw-pt-4">
+          {%- render 'gift-wrap-field',
+            id: to_id,
+            label: to_label,
+            value: gift_to,
+            maxlength: settings.gift_wrap_char_limit_to,
+            input_class: 'gift-wrap-cart-item__to'
+          -%}
+          {%- render 'gift-wrap-field',
+            id: from_id,
+            label: from_label,
+            value: gift_from,
+            maxlength: settings.gift_wrap_char_limit_from,
+            input_class: 'gift-wrap-cart-item__from'
+          -%}
+          {%- render 'gift-wrap-field',
+            id: message_id,
+            label: message_label,
+            value: gift_message,
+            maxlength: settings.gift_wrap_char_limit_message,
+            multiline: true,
+            input_class: 'gift-wrap-cart-item__message'
+          -%}
+
+          <p class="gift-wrap-cart-item__error tw-m-0 tw-text-sm tw-text-red-600" hidden>
+            {{ 'gift_wrap.update_error' | t }}
+          </p>
+
+          <button
+            type="button"
+            class="gift-wrap-cart-item__update-btn button button--primary tw-w-full"
+            aria-label="{{ 'gift_wrap.update_label' | t | escape }}"
+          >
+            {{ 'gift_wrap.update' | t }}
+          </button>
+        </div>
+      </div>
+    </gift-wrap-cart-item>
+  </td>
+</tr>

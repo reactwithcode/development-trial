@@ -1,0 +1,79 @@
+{% comment %}
+  Cart Recommendations
+
+  Rendered only through the Section Rendering API by cart-recommendations.js:
+  /recommendations/products?product_id=X&intent=complementary&section_id=cart-recommendations
+  Lists recommended products for the cart drawer's "You may also like" slider,
+  skipping anything already in the cart.
+{% endcomment %}
+
+{%- liquid
+  assign cart_product_ids = cart.items | map: 'product_id'
+  assign shown = 0
+  assign add_classes = 'tw-flex tw-shrink-0 tw-cursor-pointer tw-items-center tw-gap-2 tw-rounded tw-border-0 tw-bg-figma-ink tw-px-3.5 tw-py-3 tw-font-figma tw-text-figma-button tw-text-white tw-no-underline'
+-%}
+
+{%- if recommendations.performed and recommendations.products_count > 0 -%}
+  <ul
+    class="tw-m-0 tw-flex tw-list-none tw-snap-x tw-snap-mandatory tw-overflow-x-auto tw-scroll-smooth tw-p-0"
+    role="list"
+    data-cart-recommendations-track
+  >
+    {%- for product in recommendations.products -%}
+      {%- if cart_product_ids contains product.id
+        or product.handle == settings.gift_wrap_product_handle
+        or product.available == false
+      -%}
+        {%- continue -%}
+      {%- endif -%}
+      {%- assign shown = shown | plus: 1 -%}
+      <li class="tw-flex tw-w-full tw-shrink-0 tw-snap-start tw-items-center tw-gap-5">
+        <a href="{{ product.url }}" class="tw-block tw-w-24 tw-shrink-0" tabindex="-1" aria-hidden="true">
+          {%- if product.featured_image -%}
+            {{
+              product.featured_image
+              | image_url: width: 188
+              | image_tag: loading: 'lazy', class: 'tw-block tw-aspect-square tw-h-auto tw-w-full tw-rounded-lg tw-object-cover', alt: product.featured_image.alt
+            }}
+          {%- endif -%}
+        </a>
+        <div class="tw-flex tw-min-w-0 tw-flex-1 tw-flex-col">
+          <a href="{{ product.url }}" class="tw-font-figma tw-text-figma-small tw-text-figma-ink tw-no-underline">
+            {{- product.title | escape -}}
+          </a>
+          <span class="tw-font-figma tw-text-figma-small tw-text-figma-ink">{{ product.price | money }}</span>
+        </div>
+        {%- capture add_content -%}
+          {{ 'cart_drawer.add' | t }}
+          <span class="svg-wrapper tw-h-5 tw-w-5" aria-hidden="true">{{- 'icon-plus.svg' | inline_asset_content -}}</span>
+        {%- endcapture -%}
+        {%- assign add_label = 'cart_drawer.add_label' | t: title: product.title | escape -%}
+        {%- comment -%} Single-variant products add straight to the cart; others go to the product page to choose options. {%- endcomment -%}
+        {%- if product.has_only_default_variant -%}
+          <button
+            type="button"
+            class="{{ add_classes }}"
+            data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+            aria-label="{{ add_label }}"
+          >
+            {{ add_content }}
+          </button>
+        {%- else -%}
+          <a href="{{ product.url }}" class="{{ add_classes }}" aria-label="{{ add_label }}">{{ add_content }}</a>
+        {%- endif -%}
+      </li>
+    {%- endfor -%}
+  </ul>
+{%- endif -%}
+
+{%- comment -%} Read by cart-recommendations.js to decide whether to fall back or hide. {%- endcomment -%}
+<span data-cart-recommendations-count="{{ shown }}" hidden></span>
+
+{% schema %}
+{
+  "name": "Cart recommendations",
+  "tag": "div",
+  "class": "cart-recommendations-section",
+  "settings": []
+}
+{% endschema %}

@@ -1,0 +1,25 @@
+{% comment %}
+  USP Card
+
+  Renders one unique-selling-point card: icon, bold heading and supporting text.
+
+  Accepts:
+  - icon: {String} - Icon name from the icon-accordion set (e.g. 'heart', 'gift'), or 'none'
+  - heading: {String} - Card heading
+  - text: {String} - Supporting text (optional)
+
+  Usage:
+  {% render 'usp-card', icon: 'gift', heading: 'Loyalty rewards', text: 'Earn points on every order' %}
+{% endcomment %}
+
+<div class="tw-flex tw-flex-col tw-items-center tw-gap-1 tw-rounded-lg tw-border tw-border-solid tw-border-figma-line-soft tw-bg-figma-panel tw-px-2 tw-py-4 tw-text-center desktop:tw-gap-2 desktop:tw-p-4">
+  {%- if icon != blank and icon != 'none' -%}
+    {%- comment -%} Same icon file naming as icon-accordion, rendered at the Figma's 24px. {%- endcomment -%}
+    {%- assign icon_file = icon | replace: '_', '-' | prepend: 'icon-' | append: '.svg' -%}
+    <span class="svg-wrapper tw-h-6 tw-w-6">{{ icon_file | inline_asset_content }}</span>
+  {%- endif -%}
+  <p class="tw-m-0 tw-font-bold tw-text-figma-ink">{{ heading | escape }}</p>
+  {%- if text != blank -%}
+    <p class="tw-m-0 tw-text-figma-muted">{{ text | escape }}</p>
+  {%- endif -%}
+</div>

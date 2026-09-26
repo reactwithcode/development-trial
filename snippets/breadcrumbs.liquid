@@ -1,0 +1,35 @@
+{% comment %}
+  Breadcrumbs
+
+  Renders a breadcrumb trail for the current product. Uses the collection the
+  customer came from (a /collections/x/products/y URL) and falls back to Home.
+
+  Accepts:
+  - product: {Object} - The current product
+
+  Usage:
+  {% render 'breadcrumbs', product: product %}
+{% endcomment %}
+
+{%- liquid
+  assign link_classes = 'tw-text-figma-muted tw-no-underline hover:tw-text-figma-ink hover:tw-underline'
+  if collection
+    assign parent_title = collection.title
+    assign parent_url = collection.url
+  else
+    assign parent_title = 'breadcrumbs.home' | t
+    assign parent_url = routes.root_url
+  endif
+-%}
+
+<nav class="tw-py-4" aria-label="{{ 'breadcrumbs.label' | t | escape }}">
+  <ol class="tw-m-0 tw-flex tw-list-none tw-flex-wrap tw-items-center tw-gap-2 tw-p-0 tw-text-figma-muted">
+    <li class="tw-flex tw-items-center tw-gap-2">
+      <a href="{{ parent_url }}" class="{{ link_classes }}">{{ parent_title | escape }}</a>
+      <span aria-hidden="true">/</span>
+    </li>
+    <li>
+      <span aria-current="page">{{ product.title | escape }}</span>
+    </li>
+  </ol>
+</nav>

@@ -1,0 +1,59 @@
+{% comment %}
+  Free Shipping Bar
+
+  Renders the cart drawer's free-shipping message and progress bar. Amounts are
+  in the store currency; free-shipping-bar.js rescales them when the customer
+  shops in another currency (Liquid has no exchange rate).
+
+  Messages support [amount] (still to spend) and [threshold] (free shipping amount).
+  Only render it when settings.free_shipping_threshold > 0 (it divides by the threshold).
+
+  Accepts:
+  - cart: {Object} - The cart object
+
+  Usage:
+  {% render 'free-shipping-bar', cart: cart %}
+{% endcomment %}
+
+{%- liquid
+  assign threshold = settings.free_shipping_threshold | times: 100
+  assign remaining = threshold | minus: cart.total_price
+  if remaining < 0
+    assign remaining = 0
+  endif
+  assign progress = cart.total_price | times: 100 | divided_by: threshold
+  if progress > 100
+    assign progress = 100
+  endif
+
+  if remaining == 0
+    assign message = settings.free_shipping_message_success
+  else
+    assign message = settings.free_shipping_message_remaining
+  endif
+  assign amount_money = remaining | money
+  assign threshold_money = threshold | money
+  assign message = message | replace: '[amount]', amount_money | replace: '[threshold]', threshold_money
+-%}
+
+<free-shipping-bar
+  class="tw-mb-2 tw-flex tw-flex-col tw-gap-2"
+  data-threshold="{{ threshold }}"
+  data-total="{{ cart.total_price }}"
+  data-shop-currency="{{ shop.currency }}"
+  data-message-remaining="{{ settings.free_shipping_message_remaining | escape }}"
+  data-message-success="{{ settings.free_shipping_message_success | escape }}"
+>
+  <p class="tw-m-0 tw-font-figma tw-text-figma-small tw-text-figma-ink" data-free-shipping-message>{{ message }}</p>
+  <div
+    class="tw-h-2 tw-overflow-hidden tw-rounded-full tw-bg-figma-dot"
+    role="progressbar"
+    aria-label="{{ 'cart_drawer.free_shipping_label' | t | escape }}"
+    aria-valuemin="0"
+    aria-valuemax="100"
+    aria-valuenow="{{ progress }}"
+  >
+    {%- comment -%} A span, because Dawn hides every empty div (div:empty { display: none }). {%- endcomment -%}
+    <span class="free-shipping-bar__fill tw-block tw-h-full tw-rounded-full tw-bg-figma-ink" style="--progress: {{ progress }}%"></span>
+  </div>
+</free-shipping-bar>

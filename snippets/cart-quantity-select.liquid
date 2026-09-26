@@ -1,0 +1,36 @@
+{% comment %}
+  Cart Quantity Select
+
+  Renders a 1–10 quantity dropdown for a cart drawer line. It is a front end
+  for Dawn's hidden quantity input (#Drawer-quantity-N): cart-quantity-select.js
+  copies the chosen value into that input, so cart.js validation and updates
+  run unchanged. Only use it for lines without quantity rules or volume pricing.
+
+  Accepts:
+  - item: {Object} - The cart line item
+
+  Usage:
+  {% render 'cart-quantity-select', item: item %}
+{% endcomment %}
+
+{%- assign line = item.index | plus: 1 -%}
+
+<cart-quantity-select class="tw-relative tw-inline-flex" data-input-id="Drawer-quantity-{{ line }}">
+  <label for="Drawer-quantity-select-{{ line }}" class="visually-hidden">
+    {{- 'products.product.quantity.input_label' | t: product: item.product.title -}}
+  </label>
+  <select
+    id="Drawer-quantity-select-{{ line }}"
+    class="tw-m-0 tw-cursor-pointer tw-appearance-none tw-rounded tw-border tw-border-solid tw-border-figma-line tw-bg-white tw-py-2 tw-pl-2.5 tw-pr-8 tw-font-figma tw-text-figma-button-small tw-text-figma-ink"
+    {% if item.instructions and item.instructions.can_update_quantity == false %}
+      disabled
+    {% endif %}
+  >
+    {%- for quantity in (1..10) -%}
+      <option value="{{ quantity }}"{% if quantity == item.quantity %} selected{% endif %}>{{ quantity }}</option>
+    {%- endfor -%}
+  </select>
+  <span class="svg-wrapper tw-pointer-events-none tw-absolute tw-right-3 tw-top-1/2 tw-h-3 tw-w-3 -tw-translate-y-1/2" aria-hidden="true">
+    {{- 'icon-caret.svg' | inline_asset_content -}}
+  </span>
+</cart-quantity-select>

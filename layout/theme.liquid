@@ -78,6 +78,23 @@
       {{ body_font_bold_italic | font_face: font_display: 'swap' }}
       {{ settings.type_header_font | font_face: font_display: 'swap' }}
 
+      /* Figma redesign font (SIL Open Font License), used only inside .figma-skin (product page + cart drawer). */
+      @font-face {
+        font-family: 'Balsamiq Sans';
+        font-style: normal;
+        font-weight: 400;
+        font-display: swap;
+        src: url('{{ 'balsamiq-sans-400.woff2' | asset_url }}') format('woff2');
+      }
+
+      @font-face {
+        font-family: 'Balsamiq Sans';
+        font-style: normal;
+        font-weight: 700;
+        font-display: swap;
+        src: url('{{ 'balsamiq-sans-700.woff2' | asset_url }}') format('woff2');
+      }
+
       {% for scheme in settings.color_schemes -%}
         {% assign scheme_classes = scheme_classes | append: ', .color-' | append: scheme.id %}
         {% if forloop.index == 1 -%}
@@ -401,6 +418,9 @@
 
     {%- if settings.cart_type == 'drawer' -%}
       <script src="{{ 'cart-drawer.js' | asset_url }}" defer="defer"></script>
+    {%- endif -%}
+    {%- if settings.gift_wrap_product_handle != blank -%}
+      <script src="{{ 'gift-wrap.js' | asset_url }}" defer="defer"></script>
     {%- endif -%}
   </body>
 </html>
