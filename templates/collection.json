@@ -36,7 +36,7 @@
           "type": "filter_item",
           "settings": {
             "label": "Jackets",
-            "filter_value": "jackets"
+            "filter_value": "Jackets"
           }
         },
         "pants": {
