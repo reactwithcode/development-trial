@@ -11,6 +11,7 @@
   - disabled: {Boolean} default disabled status (optional)
   - visually_disabled: {Boolean} style the swatch as disabled, but leave the input enabled (optional)
   - shape: {String} swatch shape. Accepts 'square', defaults to circle (optional)
+  - fallback_color: {String} CSS colour used when the swatch has no data (optional)
   - help_text: {String} additional content to render inside the label (optional)
   - additional_props: {String} (optional) additional properties to attach to the input
 
@@ -47,6 +48,6 @@
   title="{{ value }}"
   class="swatch-input__label{% if shape == 'square' %} swatch-input__label--square{% endif %}"
 >
-  {% render 'swatch', swatch: swatch, shape: shape %}
+  {% render 'swatch', swatch: swatch, shape: shape, fallback_color: fallback_color %}
   {{ help_text }}
 </label>

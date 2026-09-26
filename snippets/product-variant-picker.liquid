@@ -28,6 +28,19 @@
         assign swatch_count = option.values | map: 'swatch' | compact | size
         assign picker_type = block.settings.picker_type
 
+        comment
+          Colour options without swatch data in the admin still get Figma circles,
+          coloured from each value's name (e.g. "Black", "Light Blue" -> lightblue).
+        endcomment
+        assign name_swatches = false
+        assign option_name_downcase = option.name | downcase
+        if swatch_count == 0 and block.settings.swatch_shape != 'none' and block.settings.picker_type == 'button'
+          if option_name_downcase == 'colour' or option_name_downcase == 'color'
+            assign name_swatches = true
+            assign picker_type = 'swatch'
+          endif
+        endif
+
         if swatch_count > 0 and block.settings.swatch_shape != 'none'
           if block.settings.picker_type == 'dropdown'
             assign picker_type = 'swatch_dropdown'
@@ -60,10 +73,10 @@
         <fieldset class="js product-form__input product-form__input--swatch">
           <legend class="form__label">
             <span>
-              {{ option.name }}:
-              <span data-selected-value>
-                {{- option.selected_value -}}
-              </span>
+              {{ option.name }}<span class="visually-hidden">:
+                <span data-selected-value>
+                  {{- option.selected_value -}}
+                </span></span>
             </span>
             {{ size_chart_link }}
           </legend>
@@ -71,7 +84,8 @@
             product: product,
             option: option,
             block: block,
-            picker_type: picker_type
+            picker_type: picker_type,
+            name_swatches: name_swatches
           %}
         </fieldset>
       {%- elsif picker_type == 'button' -%}

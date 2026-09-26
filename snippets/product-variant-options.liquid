@@ -6,6 +6,7 @@
   - option: {Object} current product_option object.
   - block: {Object} block object.
   - picker_type: {String} type of picker to dispay
+  - name_swatches: {Boolean} draw swatches from each value's name when the option has no swatch data (optional)
 
 
   Usage:
@@ -62,6 +63,12 @@
   {% assign escaped_value = value | escape %}
 
   {%- if picker_type == 'swatch' -%}
+    {%- liquid
+      assign fallback_color = blank
+      if name_swatches
+        assign fallback_color = value | handleize | remove: '-'
+      endif
+    -%}
     {%- capture help_text -%}
       <span class="visually-hidden">{{ escaped_value }}</span>
       {{ label_unavailable }}
@@ -77,6 +84,7 @@
       checked: value.selected,
       visually_disabled: option_disabled,
       shape: block.settings.swatch_shape,
+      fallback_color: fallback_color,
       help_text: help_text,
       additional_props: input_dataset
     %}

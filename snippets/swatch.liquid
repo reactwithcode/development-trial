@@ -3,6 +3,7 @@
   Accepts:
   - swatch: {Object} a swatch object
   - shape: {String} swatch shape. Accepts 'square', defaults to circle.
+  - fallback_color: {String} CSS colour used when the swatch has no colour or image (optional)
 
   Usage:
   {% render 'swatch',
@@ -19,6 +20,8 @@
     assign swatch_focal_point = swatch.image.presentation.focal_point
   elsif swatch.color
     assign swatch_value = 'rgb(' | append: swatch.color.rgb | append: ')'
+  elsif fallback_color != blank
+    assign swatch_value = fallback_color
   endif
 -%}
 
