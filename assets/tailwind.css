@@ -167,14 +167,9 @@
 
 .product-info-stack.product__info-container > * + * {
   margin-bottom: 0px;
-  margin-top: 3.2rem;
 }
 
-@media (min-width: 990px) {
-  .product-info-stack.product__info-container > * + * {
-    margin-top: 4rem;
-  }
-}
+
 
 .product-info-stack.product__info-container > [data-stack-gap='2'] {
   margin-top: 0.4rem;
