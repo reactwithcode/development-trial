@@ -200,110 +200,204 @@
 
   {%- comment -%} ── Filter drawer ── {%- endcomment -%}
   {%- if has_filters -%}
+    {%- liquid
+      assign active_filter_count = 0
+      for filter in collection.filters
+        if filter.type == 'price_range'
+          if filter.min_value.value or filter.max_value.value
+            assign active_filter_count = active_filter_count | plus: 1
+          endif
+        else
+          assign active_filter_count = active_filter_count | plus: filter.active_values.size
+        endif
+      endfor
+    -%}
     <div
       class="cpg__drawer"
       aria-hidden="true"
       id="cpg-drawer-{{ section.id }}"
       role="dialog"
-      aria-label="Filters"
+      aria-labelledby="cpg-drawer-title-{{ section.id }}"
+      tabindex="-1"
       data-cpg-drawer
     >
       <div class="cpg__drawer-header">
-        <h3 class="cpg__drawer-title">Filters</h3>
+        <h2 class="cpg__drawer-title" id="cpg-drawer-title-{{ section.id }}">
+          {{- 'products.facets.filters_title' | t -}}
+          {%- if active_filter_count > 0 -%}
+            <sup class="cpg__count-sup">[{{ active_filter_count }}]</sup>
+          {%- endif -%}
+        </h2>
         <button
           class="cpg__drawer-close"
           type="button"
-          aria-label="Close filters"
+          aria-label="{{ 'products.facets.close_filters' | t }}"
           data-cpg-close
         >
-          {{ 'icon-close.svg' | inline_asset_content }}
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
+            <path d="M16.2412 7.75753L7.75589 16.2428M16.2412 16.2428L7.75589 7.75753" stroke="currentColor" stroke-linecap="square" stroke-linejoin="round"/>
+          </svg>
         </button>
       </div>
 
       <form
         class="cpg__drawer-form"
+        data-cpg-form
         action="{{ collection.url }}"
         method="get"
       >
         <input type="hidden" name="sort_by" value="{{ sort_by }}">
 
-        <div class="cpg__drawer-filters">
-          {%- for filter in collection.filters -%}
-            <div class="cpg__accordion">
-              <button
-                class="cpg__accordion-trigger"
-                type="button"
-                aria-expanded="true"
-                aria-controls="cpg-filter-{{ forloop.index }}-{{ section.id }}"
-                data-cpg-accordion-trigger
-              >
-                <span class="cpg__accordion-label">{{ filter.label }}</span>
-                <span class="cpg__accordion-chevron" aria-hidden="true">{{ 'icon-caret.svg' | inline_asset_content }}</span>
-              </button>
-
-              <div
-                class="cpg__accordion-panel"
-                id="cpg-filter-{{ forloop.index }}-{{ section.id }}"
-              >
-                {%- if filter.type == 'list' -%}
-                  <ul class="cpg__filter-list" role="list">
-                    {%- for filter_value in filter.values -%}
-                      <li class="cpg__filter-item">
-                        <label class="cpg__filter-label">
-                          <input
-                            class="cpg__filter-checkbox"
-                            type="checkbox"
-                            name="{{ filter.param_name }}"
-                            value="{{ filter_value.value | escape }}"
-                            {%- if filter_value.active %} checked{%- endif %}
-                          >
-                          <span class="cpg__filter-text">{{ filter_value.label }}</span>
-                          <span class="cpg__filter-count">({{ filter_value.count }})</span>
-                        </label>
-                      </li>
+        <div class="cpg__drawer-body">
+          {%- if active_filter_count > 0 -%}
+            <div class="cpg__selected">
+              <p class="cpg__selected-label">{{ 'products.facets.selected_filters' | t }}</p>
+              <div class="cpg__selected-list">
+                {%- for filter in collection.filters -%}
+                  {%- if filter.type == 'price_range' -%}
+                    {%- if filter.min_value.value or filter.max_value.value -%}
+                      <a
+                        href="{{ filter.url_to_remove }}"
+                        class="cpg__selected-chip"
+                        aria-label="{{ 'products.facets.clear_filter' | t }}: {{ filter.label | escape }}"
+                      >
+                        <span>
+                          {{- filter.min_value.value | default: 0 | money }}–
+                          {{- filter.max_value.value | default: filter.range_max | money -}}
+                        </span>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" focusable="false">
+                          <path d="M10.8275 5.17169L5.1706 10.8285M10.8275 10.8285L5.1706 5.17169" stroke="currentColor" stroke-width="0.666667" stroke-linecap="square" stroke-linejoin="round"/>
+                        </svg>
+                      </a>
+                    {%- endif -%}
+                  {%- else -%}
+                    {%- for active_value in filter.active_values -%}
+                      <a
+                        href="{{ active_value.url_to_remove }}"
+                        class="cpg__selected-chip"
+                        aria-label="{{ 'products.facets.clear_filter' | t }}: {{ active_value.label | escape }}"
+                      >
+                        <span>{{ active_value.label | escape }}</span>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" focusable="false">
+                          <path d="M10.8275 5.17169L5.1706 10.8285M10.8275 10.8285L5.1706 5.17169" stroke="currentColor" stroke-width="0.666667" stroke-linecap="square" stroke-linejoin="round"/>
+                        </svg>
+                      </a>
                     {%- endfor -%}
-                  </ul>
-
-                {%- elsif filter.type == 'price_range' -%}
-                  <div class="cpg__price-range">
-                    <div class="cpg__price-field">
-                      <span>From</span>
-                      <input
-                        class="cpg__price-input"
-                        type="number"
-                        name="filter.v.price.gte"
-                        min="0"
-                        max="{{ filter.range_max | round: 0 }}"
-                        placeholder="{{ filter.range_min | round: 0 }}"
-                        {%- if filter.min_value.value %} value="{{ filter.min_value.value | round: 0 }}"{%- endif %}
-                      >
-                    </div>
-                    <div class="cpg__price-field">
-                      <span>To</span>
-                      <input
-                        class="cpg__price-input"
-                        type="number"
-                        name="filter.v.price.lte"
-                        min="0"
-                        max="{{ filter.range_max | round: 0 }}"
-                        placeholder="{{ filter.range_max | round: 0 }}"
-                        {%- if filter.max_value.value %} value="{{ filter.max_value.value | round: 0 }}"{%- endif %}
-                      >
-                    </div>
-                  </div>
-                {%- endif -%}
+                  {%- endif -%}
+                {%- endfor -%}
               </div>
             </div>
-          {%- endfor -%}
+          {%- endif -%}
+
+          <div class="cpg__accordions">
+            {%- for filter in collection.filters -%}
+              {%- liquid
+                assign filter_active_count = filter.active_values.size
+                if filter.type == 'price_range'
+                  assign filter_active_count = 0
+                  if filter.min_value.value or filter.max_value.value
+                    assign filter_active_count = 1
+                  endif
+                endif
+
+                assign is_open = false
+                if filter_active_count > 0
+                  assign is_open = true
+                elsif active_filter_count == 0 and forloop.first
+                  assign is_open = true
+                endif
+
+                assign input_type = 'checkbox'
+                if filter.param_name == 'filter.p.product_type'
+                  assign input_type = 'radio'
+                endif
+              -%}
+              <div class="cpg__accordion">
+                <button
+                  class="cpg__accordion-trigger"
+                  type="button"
+                  aria-expanded="{{ is_open }}"
+                  aria-controls="cpg-filter-{{ forloop.index }}-{{ section.id }}"
+                  data-cpg-accordion-trigger
+                >
+                  <span class="cpg__accordion-label">
+                    {{- filter.label | escape -}}
+                    {%- if filter_active_count > 0 -%}
+                      <sup class="cpg__count-sup">[{{ filter_active_count }}]</sup>
+                    {%- endif -%}
+                  </span>
+                  <svg class="cpg__accordion-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
+                    <path class="cpg__accordion-icon-v" d="M10 5L10 15" stroke="currentColor" stroke-width="1.25" stroke-linecap="square"/>
+                    <path d="M15 10L5 10" stroke="currentColor" stroke-width="1.25" stroke-linecap="square"/>
+                  </svg>
+                </button>
+
+                <div
+                  class="cpg__accordion-panel"
+                  id="cpg-filter-{{ forloop.index }}-{{ section.id }}"
+                >
+                  {%- if filter.type == 'list' or filter.type == 'boolean' -%}
+                    <ul class="cpg__filter-list" role="list">
+                      {%- for filter_value in filter.values -%}
+                        <li>
+                          <label class="cpg__filter-option{% if filter_value.count == 0 and filter_value.active == false %} is-disabled{% endif %}">
+                            <input
+                              class="cpg__filter-input cpg__filter-input--{{ input_type }}"
+                              type="{{ input_type }}"
+                              name="{{ filter.param_name }}"
+                              value="{{ filter_value.value | escape }}"
+                              {%- if filter_value.active %} checked{% endif %}
+                              {%- if filter_value.count == 0 and filter_value.active == false %} disabled{% endif %}
+                            >
+                            <span class="cpg__filter-text">{{ filter_value.label | escape }}</span>
+                          </label>
+                        </li>
+                      {%- endfor -%}
+                    </ul>
+
+                  {%- elsif filter.type == 'price_range' -%}
+                    <div class="cpg__price-range">
+                      <label class="cpg__price-field">
+                        <span>{{ 'products.facets.from' | t }}</span>
+                        <input
+                          class="cpg__price-input"
+                          type="number"
+                          name="{{ filter.min_value.param_name }}"
+                          min="0"
+                          max="{{ filter.range_max | money_without_currency | remove: ',' | round: 0 }}"
+                          placeholder="0"
+                          {%- if filter.min_value.value %} value="{{ filter.min_value.value | money_without_currency | remove: ',' }}"{% endif %}
+                        >
+                      </label>
+                      <label class="cpg__price-field">
+                        <span>{{ 'products.facets.to' | t }}</span>
+                        <input
+                          class="cpg__price-input"
+                          type="number"
+                          name="{{ filter.max_value.param_name }}"
+                          min="0"
+                          max="{{ filter.range_max | money_without_currency | remove: ',' | round: 0 }}"
+                          placeholder="{{ filter.range_max | money_without_currency | remove: ',' | round: 0 }}"
+                          {%- if filter.max_value.value %} value="{{ filter.max_value.value | money_without_currency | remove: ',' }}"{% endif %}
+                        >
+                      </label>
+                    </div>
+                  {%- endif -%}
+                </div>
+              </div>
+            {%- endfor -%}
+          </div>
         </div>
 
         <div class="cpg__drawer-footer">
           <a
-            href="{{ collection.url }}"
+            href="{{ collection.url }}{% if collection.sort_by != blank %}?sort_by={{ collection.sort_by }}{% endif %}"
             class="cpg__btn cpg__btn--secondary"
-          >Reset</a>
+          >
+            {{- 'products.facets.reset' | t -}}
+          </a>
           <button type="submit" class="cpg__btn cpg__btn--primary">
-            View {{ collection.products_count }} products
+            {{- 'products.facets.view_products' | t: count: collection.products_count -}}
           </button>
         </div>
       </form>
