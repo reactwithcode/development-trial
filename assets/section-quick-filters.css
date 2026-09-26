@@ -1,4 +1,5 @@
 quick-filters {
+  font-family: var(--font-general-sans);
   display: block;
 }
 
@@ -59,7 +60,7 @@ quick-filters {
   border: none;
   padding: 0.4rem 0;
   cursor: pointer;
-  font-family: var(--font-body-family, inherit);
+  font-family: var(--font-general-sans);
   font-size: 1.4rem;
   font-weight: 500;
   letter-spacing: 0.0357em;
