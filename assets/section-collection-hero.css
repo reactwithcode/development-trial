@@ -9,6 +9,19 @@
   }
 }
 
+/* Matches the Collection Product Grid container so all three sections share one left edge */
+.collection-hero__inner {
+  max-width: var(--page-width);
+  margin: 0 auto;
+  padding: 0 1.6rem;
+}
+
+@media screen and (min-width: 750px) {
+  .collection-hero__inner {
+    padding: 0 2.4rem;
+  }
+}
+
 .collection-hero__title {
   font-family: var(--font-body-family);
   font-weight: 500;

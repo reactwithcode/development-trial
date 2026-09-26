@@ -2,6 +2,19 @@ quick-filters {
   display: block;
 }
 
+/* Matches the Collection Product Grid container so all three sections share one left edge */
+.quick-filters__inner {
+  max-width: var(--page-width);
+  margin: 0 auto;
+  padding: 0 1.6rem;
+}
+
+@media screen and (min-width: 750px) {
+  .quick-filters__inner {
+    padding: 0 2.4rem;
+  }
+}
+
 .quick-filters__track-wrapper {
   position: relative;
   padding: 1.6rem 0;
