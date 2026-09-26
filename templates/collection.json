@@ -12,6 +12,7 @@
     "collection-hero": {
       "type": "section-collection-hero",
       "settings": {
+        "heading": "",
         "color_scheme": "scheme-1"
       }
     },
@@ -27,8 +28,8 @@
         "sets": {
           "type": "filter_item",
           "settings": {
-            "label": "Sets",
-            "filter_value": "Sets"
+            "label": "Shirts",
+            "filter_value": "Shirts"
           }
         },
         "jackets": {
