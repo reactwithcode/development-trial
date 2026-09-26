@@ -365,6 +365,16 @@
   text-decoration: line-through;
 }
 
+/* ── Loading state while filters re-render ── */
+.cpg__results {
+  transition: opacity 0.2s ease;
+}
+
+.cpg.is-loading .cpg__results {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
 /* ── Pagination ──
    Figma: 32px outlined chevron buttons, 32px number cells, 24px gaps. */
 .cpg__pagination {
@@ -505,11 +515,6 @@
 
 .cpg__drawer:focus {
   outline: none;
-}
-
-.cpg__drawer--instant,
-.cpg__overlay--instant {
-  transition: none;
 }
 
 .cpg__drawer-header {

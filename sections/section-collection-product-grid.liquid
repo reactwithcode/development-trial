@@ -20,10 +20,10 @@
   endfor
 -%}
 
-<collection-product-grid class="cpg" id="cpg-{{ section.id }}">
+<collection-product-grid class="cpg" id="cpg-{{ section.id }}" data-section-id="{{ section.id }}">
 
   {%- comment -%} ── Toolbar ── {%- endcomment -%}
-  <div class="cpg__toolbar">
+  <div class="cpg__toolbar" data-cpg-region="toolbar">
     <div class="cpg__toolbar-inner">
       {%- if has_filters -%}
         <button
@@ -41,7 +41,7 @@
       {%- endif -%}
 
       <div class="cpg__toolbar-right">
-        <span class="cpg__count">{{ collection.products_count }} products</span>
+        <span class="cpg__count">{{ 'products.facets.product_count_simple' | t: count: collection.products_count }}</span>
         <div class="cpg__sort-wrap">
           <label class="cpg__sort-label" for="cpg-sort-{{ section.id }}">Sort by</label>
           <div class="cpg__sort-select-wrap">
@@ -68,21 +68,24 @@
   </div>
 
   {%- comment -%} ── Active filter chips ── {%- endcomment -%}
+  <div data-cpg-region="active">
   {%- if has_active_filters -%}
     <div class="cpg__active-filters">
       {%- for filter in collection.filters -%}
         {%- for active_value in filter.active_values -%}
-          <a href="{{ active_value.url_to_remove }}" class="cpg__active-chip">
+          <a href="{{ active_value.url_to_remove }}" class="cpg__active-chip" data-cpg-link>
             <span>{{ active_value.label }}</span>
             {{ 'icon-close.svg' | inline_asset_content }}
           </a>
         {%- endfor -%}
       {%- endfor -%}
-      <a href="{{ collection.url }}" class="cpg__active-clear">Clear all</a>
+      <a href="{{ collection.url }}" class="cpg__active-clear" data-cpg-link>Clear all</a>
     </div>
   {%- endif -%}
+  </div>
 
   {%- comment -%} ── Product grid + pagination ── {%- endcomment -%}
+  <div class="cpg__results" data-cpg-region="results">
   {%- paginate collection.products by section.settings.products_per_page -%}
     <div class="cpg__grid">
       {%- for product in collection.products -%}
@@ -207,6 +210,7 @@
       </nav>
     {%- endif -%}
   {%- endpaginate -%}
+  </div>
 
   {%- comment -%} ── Filter overlay ── {%- endcomment -%}
   <div
@@ -239,7 +243,7 @@
       data-cpg-drawer
     >
       <div class="cpg__drawer-header">
-        <h2 class="cpg__drawer-title" id="cpg-drawer-title-{{ section.id }}">
+        <h2 class="cpg__drawer-title" id="cpg-drawer-title-{{ section.id }}" data-cpg-region="drawer-title">
           {{- 'products.facets.filters_title' | t -}}
           {%- if active_filter_count > 0 -%}
             <sup class="cpg__count-sup">[{{ active_filter_count }}]</sup>
@@ -263,9 +267,9 @@
         action="{{ collection.url }}"
         method="get"
       >
-        <input type="hidden" name="sort_by" value="{{ sort_by }}">
+        <input type="hidden" name="sort_by" value="{{ sort_by }}" data-cpg-sort-input>
 
-        <div class="cpg__drawer-body">
+        <div class="cpg__drawer-body" data-cpg-region="drawer-body">
           {%- if active_filter_count > 0 -%}
             <div class="cpg__selected">
               <p class="cpg__selected-label">{{ 'products.facets.selected_filters' | t }}</p>
@@ -275,7 +279,7 @@
                     {%- if filter.min_value.value or filter.max_value.value -%}
                       <a
                         href="{{ filter.url_to_remove }}"
-                        class="cpg__selected-chip"
+                        class="cpg__selected-chip" data-cpg-link
                         aria-label="{{ 'products.facets.clear_filter' | t }}: {{ filter.label | escape }}"
                       >
                         <span>
@@ -291,7 +295,7 @@
                     {%- for active_value in filter.active_values -%}
                       <a
                         href="{{ active_value.url_to_remove }}"
-                        class="cpg__selected-chip"
+                        class="cpg__selected-chip" data-cpg-link
                         aria-label="{{ 'products.facets.clear_filter' | t }}: {{ active_value.label | escape }}"
                       >
                         <span>{{ active_value.label | escape }}</span>
@@ -406,10 +410,10 @@
           </div>
         </div>
 
-        <div class="cpg__drawer-footer">
+        <div class="cpg__drawer-footer" data-cpg-region="drawer-footer">
           <a
             href="{{ collection.url }}{% if collection.sort_by != blank %}?sort_by={{ collection.sort_by }}{% endif %}"
-            class="cpg__btn cpg__btn--secondary"
+            class="cpg__btn cpg__btn--secondary" data-cpg-link
           >
             {{- 'products.facets.reset' | t -}}
           </a>
