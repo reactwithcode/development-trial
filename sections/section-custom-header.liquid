@@ -1,0 +1,329 @@
+{{ 'section-custom-header.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'custom-header.js' | asset_url }}" defer="defer"></script>
+
+{%- liquid
+  assign menu_links = linklists[section.settings.menu].links
+-%}
+
+<custom-header
+  class="custom-header color-{{ section.settings.color_scheme }} gradient"
+  id="custom-header-{{ section.id }}"
+>
+
+  {%- comment -%} ── DESKTOP HEADER (≥990px) ── {%- endcomment -%}
+  <div class="custom-header__desktop">
+
+    {%- comment -%} Row 1: Search | Logo | Icons {%- endcomment -%}
+    <div class="custom-header__utility-row">
+
+      {%- comment -%} Search {%- endcomment -%}
+      <div class="custom-header__search-col">
+        <form action="{{ routes.search_url }}" method="get" class="custom-header__search-form" role="search">
+          <input type="hidden" name="type" value="product">
+          <div class="custom-header__search-pill">
+            <button type="submit" class="custom-header__search-icon" aria-label="{{ 'general.search.search' | t }}">
+              {{- 'icon-search.svg' | inline_asset_content -}}
+            </button>
+            <label for="CustomHeaderSearch-{{ section.id }}" class="visually-hidden">
+              {{- 'general.search.search' | t -}}
+            </label>
+            <input
+              id="CustomHeaderSearch-{{ section.id }}"
+              class="custom-header__search-input"
+              type="search"
+              name="q"
+              value="{{ search.terms | escape }}"
+              placeholder="{{ 'general.search.search' | t }}"
+              autocomplete="off"
+              required
+            >
+          </div>
+        </form>
+      </div>
+
+      {%- comment -%} Logo {%- endcomment -%}
+      <div class="custom-header__logo-col">
+        {%- if request.page_type == 'index' -%}<h1 class="custom-header__logo-heading">{%- endif -%}
+        <a href="{{ routes.root_url }}" class="custom-header__logo-link">
+          {%- if settings.logo != blank -%}
+            {%- assign logo_alt = settings.logo.alt | default: shop.name | escape -%}
+            {{
+              settings.logo
+              | image_url: width: 300
+              | image_tag:
+                class: 'custom-header__logo-img',
+                alt: logo_alt,
+                width: settings.logo_width,
+                height: settings.logo_width | divided_by: settings.logo.aspect_ratio,
+                loading: 'eager',
+                fetchpriority: 'high'
+            }}
+          {%- else -%}
+            <span class="custom-header__logo-text">{{ shop.name }}</span>
+          {%- endif -%}
+        </a>
+        {%- if request.page_type == 'index' -%}</h1>{%- endif -%}
+      </div>
+
+      {%- comment -%} Right icons {%- endcomment -%}
+      <div class="custom-header__icons-col">
+
+        {%- if section.settings.show_currency_selector and localization.available_countries.size > 1 -%}
+          <div class="custom-header__region-selector">
+            <span class="custom-header__region-text">
+              {{ localization.country.currency.symbol }} {{ localization.country.currency.iso_code }}
+            </span>
+            <span class="custom-header__region-chevron" aria-hidden="true">
+              {{- 'icon-caret.svg' | inline_asset_content -}}
+            </span>
+          </div>
+        {%- endif -%}
+
+        {%- if section.settings.show_account -%}
+          <a
+            href="{{ routes.account_url }}"
+            class="custom-header__icon-btn"
+            aria-label="{{ 'customer.account.title' | t }}"
+          >
+            {{- 'icon-account.svg' | inline_asset_content -}}
+          </a>
+        {%- endif -%}
+
+        {%- if section.settings.show_wishlist -%}
+          <a href="/pages/wishlist" class="custom-header__icon-btn" aria-label="Wishlist">
+            {{- 'icon-heart.svg' | inline_asset_content -}}
+          </a>
+        {%- endif -%}
+
+        <a
+          href="{{ routes.cart_url }}"
+          class="custom-header__icon-btn custom-header__cart-btn"
+          id="cart-icon-bubble"
+          aria-label="{{ 'sections.header.cart_count' | t: count: cart.item_count }}"
+        >
+          {{- 'icon-cart.svg' | inline_asset_content -}}
+          {%- if cart.item_count > 0 -%}
+            <span class="custom-header__cart-count" aria-hidden="true">{{ cart.item_count }}</span>
+          {%- endif -%}
+        </a>
+
+      </div>
+    </div>
+
+    {%- comment -%} Divider {%- endcomment -%}
+    <div class="custom-header__divider" role="separator" aria-hidden="true"></div>
+
+    {%- comment -%} Row 2: Nav {%- endcomment -%}
+    <nav class="custom-header__nav" aria-label="{{ 'accessibility.nav_primary' | t }}">
+
+      {%- if section.settings.show_featured_item and section.settings.featured_item_text != blank -%}
+        <a
+          href="{{ section.settings.featured_item_url | default: '#' }}"
+          class="custom-header__nav-featured"
+        >
+          <span class="custom-header__fire-badge" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 11 11" fill="none" width="11" height="11" focusable="false">
+              <path d="M5.674 1.29834C5.6895 1.30037 5.70443 1.30513 5.71795 1.31298C5.73158 1.32094 5.74364 1.33161 5.7531 1.34423C6.04564 1.73636 6.41697 2.06208 6.84197 2.30127L7.02752 2.39892L7.03435 2.40185C7.76161 2.72762 8.36635 3.27688 8.76091 3.96923C9.15541 4.66164 9.31918 5.46166 9.22869 6.25341C9.13817 7.04525 8.79768 7.78798 8.25701 8.37353C7.71642 8.95883 7.00373 9.35701 6.22185 9.51025C5.43973 9.66346 4.62905 9.56333 3.9074 9.22509C3.18571 8.88681 2.5898 8.32762 2.2072 7.62841C1.82477 6.92931 1.6753 6.12647 1.77947 5.33642C1.88369 4.54629 2.23657 3.80998 2.78728 3.23388C2.79913 3.22152 2.81333 3.21181 2.82927 3.20556C2.84547 3.19931 2.86372 3.19652 2.88103 3.19775C2.8982 3.19903 2.91484 3.20399 2.92986 3.2124C2.94494 3.22084 2.95786 3.23254 2.96795 3.24658C3.1894 3.55576 3.45988 3.82702 3.76775 4.05029L4.05095 4.25634L4.10271 3.90966C4.25283 2.89138 4.78249 1.96713 5.58513 1.32275C5.59731 1.31303 5.61118 1.30556 5.62615 1.30127C5.64141 1.29695 5.65827 1.29634 5.674 1.29834ZM5.57537 4.69287C5.14444 5.07862 4.84212 5.58475 4.70623 6.14306C4.47125 6.06225 4.25203 5.94747 4.05584 5.80224L3.81951 5.62646L3.72771 5.90673C3.64372 6.16281 3.61576 6.43394 3.64666 6.70166C3.67764 6.96961 3.76701 7.22816 3.9074 7.45849C4.04777 7.68869 4.23627 7.88635 4.46013 8.03662C4.68401 8.18683 4.93807 8.28692 5.20427 8.32959C5.47056 8.37224 5.74343 8.35649 6.0031 8.28369C6.26254 8.2109 6.50302 8.08239 6.70818 7.90771C6.91351 7.73279 7.07841 7.51486 7.19158 7.27002C7.30475 7.02516 7.36424 6.75851 7.36443 6.48877C7.36447 6.03688 7.20016 5.60027 6.90252 5.26025C6.60478 4.92016 6.19334 4.6998 5.74529 4.64013L5.64861 4.62744L5.57537 4.69287Z" fill="white" stroke="white" stroke-width="0.424891"/>
+            </svg>
+          </span>
+          {{- section.settings.featured_item_text | upcase | escape -}}
+        </a>
+      {%- endif -%}
+
+      {%- for link in menu_links -%}
+        <a href="{{ link.url }}" class="custom-header__nav-item">
+          {{- link.title | upcase | escape -}}
+          {%- if link.links.size > 0 -%}
+            <span class="custom-header__nav-chevron" aria-hidden="true">
+              {{- 'icon-caret.svg' | inline_asset_content -}}
+            </span>
+          {%- endif -%}
+        </a>
+      {%- endfor -%}
+
+    </nav>
+  </div>
+
+  {%- comment -%} ── MOBILE HEADER (<990px) ── {%- endcomment -%}
+  <div class="custom-header__mobile">
+
+    <div class="custom-header__mobile-left">
+      <button
+        class="custom-header__menu-btn custom-header__icon-btn"
+        type="button"
+        aria-label="{{ 'accessibility.open_menu' | t }}"
+        aria-expanded="false"
+        aria-controls="mobile-drawer-{{ section.id }}"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" width="24" height="24" focusable="false" aria-hidden="true">
+          <path d="M7 19V5M12 19V5M17 19V5" stroke="currentColor" stroke-linecap="square"/>
+        </svg>
+      </button>
+      <a
+        href="{{ routes.search_url }}"
+        class="custom-header__icon-btn"
+        aria-label="{{ 'general.search.search' | t }}"
+      >
+        {{- 'icon-search.svg' | inline_asset_content -}}
+      </a>
+    </div>
+
+    <div class="custom-header__mobile-logo">
+      {%- if request.page_type == 'index' -%}<h1 class="custom-header__logo-heading">{%- endif -%}
+      <a href="{{ routes.root_url }}" class="custom-header__logo-link">
+        {%- if settings.logo != blank -%}
+          {%- assign logo_alt = settings.logo.alt | default: shop.name | escape -%}
+          {{
+            settings.logo
+            | image_url: width: 200
+            | image_tag:
+              class: 'custom-header__logo-img',
+              alt: logo_alt,
+              loading: 'eager'
+          }}
+        {%- else -%}
+          <span class="custom-header__logo-text custom-header__logo-text--mobile">{{ shop.name }}</span>
+        {%- endif -%}
+      </a>
+      {%- if request.page_type == 'index' -%}</h1>{%- endif -%}
+    </div>
+
+    <div class="custom-header__mobile-right">
+      {%- if section.settings.show_wishlist -%}
+        <a href="/pages/wishlist" class="custom-header__icon-btn" aria-label="Wishlist">
+          {{- 'icon-heart.svg' | inline_asset_content -}}
+        </a>
+      {%- endif -%}
+      <a
+        href="{{ routes.cart_url }}"
+        class="custom-header__icon-btn custom-header__cart-btn"
+        aria-label="{{ 'sections.header.cart_count' | t: count: cart.item_count }}"
+      >
+        {{- 'icon-cart.svg' | inline_asset_content -}}
+        {%- if cart.item_count > 0 -%}
+          <span class="custom-header__cart-count" aria-hidden="true">{{ cart.item_count }}</span>
+        {%- endif -%}
+      </a>
+    </div>
+
+  </div>
+
+  {%- comment -%} ── MOBILE DRAWER ── {%- endcomment -%}
+  <div
+    class="custom-header__overlay"
+    id="mobile-overlay-{{ section.id }}"
+    aria-hidden="true"
+  ></div>
+
+  <div
+    class="custom-header__mobile-drawer"
+    id="mobile-drawer-{{ section.id }}"
+    aria-hidden="true"
+    aria-label="{{ 'accessibility.nav_primary' | t }}"
+  >
+    <div class="custom-header__drawer-header">
+      <button
+        class="custom-header__drawer-close custom-header__icon-btn"
+        type="button"
+        aria-label="{{ 'accessibility.close' | t }}"
+      >
+        {{- 'icon-close.svg' | inline_asset_content -}}
+      </button>
+    </div>
+
+    <nav class="custom-header__drawer-nav" aria-label="{{ 'accessibility.nav_primary' | t }}">
+
+      {%- if section.settings.show_featured_item and section.settings.featured_item_text != blank -%}
+        <a
+          href="{{ section.settings.featured_item_url | default: '#' }}"
+          class="custom-header__drawer-nav-item custom-header__drawer-nav-featured"
+        >
+          <span class="custom-header__fire-badge" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 11 11" fill="none" width="11" height="11" focusable="false">
+              <path d="M5.674 1.29834C5.6895 1.30037 5.70443 1.30513 5.71795 1.31298C5.73158 1.32094 5.74364 1.33161 5.7531 1.34423C6.04564 1.73636 6.41697 2.06208 6.84197 2.30127L7.02752 2.39892L7.03435 2.40185C7.76161 2.72762 8.36635 3.27688 8.76091 3.96923C9.15541 4.66164 9.31918 5.46166 9.22869 6.25341C9.13817 7.04525 8.79768 7.78798 8.25701 8.37353C7.71642 8.95883 7.00373 9.35701 6.22185 9.51025C5.43973 9.66346 4.62905 9.56333 3.9074 9.22509C3.18571 8.88681 2.5898 8.32762 2.2072 7.62841C1.82477 6.92931 1.6753 6.12647 1.77947 5.33642C1.88369 4.54629 2.23657 3.80998 2.78728 3.23388C2.79913 3.22152 2.81333 3.21181 2.82927 3.20556C2.84547 3.19931 2.86372 3.19652 2.88103 3.19775C2.8982 3.19903 2.91484 3.20399 2.92986 3.2124C2.94494 3.22084 2.95786 3.23254 2.96795 3.24658C3.1894 3.55576 3.45988 3.82702 3.76775 4.05029L4.05095 4.25634L4.10271 3.90966C4.25283 2.89138 4.78249 1.96713 5.58513 1.32275C5.59731 1.31303 5.61118 1.30556 5.62615 1.30127C5.64141 1.29695 5.65827 1.29634 5.674 1.29834ZM5.57537 4.69287C5.14444 5.07862 4.84212 5.58475 4.70623 6.14306C4.47125 6.06225 4.25203 5.94747 4.05584 5.80224L3.81951 5.62646L3.72771 5.90673C3.64372 6.16281 3.61576 6.43394 3.64666 6.70166C3.67764 6.96961 3.76701 7.22816 3.9074 7.45849C4.04777 7.68869 4.23627 7.88635 4.46013 8.03662C4.68401 8.18683 4.93807 8.28692 5.20427 8.32959C5.47056 8.37224 5.74343 8.35649 6.0031 8.28369C6.26254 8.2109 6.50302 8.08239 6.70818 7.90771C6.91351 7.73279 7.07841 7.51486 7.19158 7.27002C7.30475 7.02516 7.36424 6.75851 7.36443 6.48877C7.36447 6.03688 7.20016 5.60027 6.90252 5.26025C6.60478 4.92016 6.19334 4.6998 5.74529 4.64013L5.64861 4.62744L5.57537 4.69287Z" fill="white" stroke="white" stroke-width="0.424891"/>
+            </svg>
+          </span>
+          {{- section.settings.featured_item_text | escape -}}
+        </a>
+      {%- endif -%}
+
+      {%- for link in menu_links -%}
+        <a href="{{ link.url }}" class="custom-header__drawer-nav-item">
+          {{- link.title | escape -}}
+        </a>
+      {%- endfor -%}
+
+    </nav>
+  </div>
+
+</custom-header>
+
+{% schema %}
+{
+  "name": "Custom Header",
+  "tag": "section",
+  "class": "section-custom-header",
+  "settings": [
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Navigation menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Featured nav item"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_featured_item",
+      "label": "Show featured item",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "featured_item_text",
+      "label": "Label",
+      "default": "Black Friday Sale"
+    },
+    {
+      "type": "url",
+      "id": "featured_item_url",
+      "label": "Link URL"
+    },
+    {
+      "type": "header",
+      "content": "Icons"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_account",
+      "label": "Show account icon",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_wishlist",
+      "label": "Show wishlist icon",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_currency_selector",
+      "label": "Show currency selector",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Header"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,36 @@
+{{ 'section-collection-hero.css' | asset_url | stylesheet_tag }}
+
+{%- assign hero_title = section.settings.heading | default: collection.title | default: page.title -%}
+
+<div class="collection-hero color-{{ section.settings.color_scheme }} gradient">
+  <div class="page-width">
+    <h1 class="collection-hero__title">{{ hero_title }}</h1>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Collection Hero",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "info": "Leave blank to use the collection or page title automatically"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection Hero"
+    }
+  ]
+}
+{% endschema %}

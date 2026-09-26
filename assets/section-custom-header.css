@@ -1,0 +1,423 @@
+/* ── Custom element base ── */
+custom-header {
+  display: block;
+}
+
+/* ────────────────────────────
+   DESKTOP HEADER  (≥ 990px)
+   ──────────────────────────── */
+.custom-header__desktop {
+  display: none;
+  flex-direction: column;
+  gap: 1.6rem;
+  padding: 1.6rem 2.4rem;
+}
+
+@media screen and (min-width: 990px) {
+  .custom-header__desktop {
+    display: flex;
+  }
+}
+
+/* Row 1 — utility */
+.custom-header__utility-row {
+  display: flex;
+  align-items: center;
+  gap: 2.4rem;
+  padding-bottom: 1.6rem;
+  border-bottom: 0.1rem solid #e4e4e0;
+}
+
+/* Search column */
+.custom-header__search-col {
+  flex: 1 0 0;
+  min-width: 0;
+  display: flex;
+}
+
+.custom-header__search-form {
+  width: 100%;
+  max-width: 34.4rem;
+}
+
+.custom-header__search-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  background-color: #efefec;
+  border-radius: 99.9rem;
+  padding: 0.8rem;
+  width: 22.3rem;
+  max-width: 100%;
+  transition: background-color 0.15s ease;
+}
+
+.custom-header__search-pill:hover {
+  background-color: #e4e4e0;
+}
+
+.custom-header__search-pill:focus-within {
+  outline: 0.2rem solid rgba(var(--color-foreground), 0.5);
+  outline-offset: 0.3rem;
+}
+
+.custom-header__search-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: #6f6f6a;
+}
+
+.custom-header__search-icon svg {
+  width: 2rem;
+  height: 2rem;
+}
+
+.custom-header__search-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: var(--font-body-family);
+  font-weight: 500;
+  font-size: 1.2rem;
+  line-height: 1.6rem;
+  color: rgb(var(--color-foreground));
+}
+
+.custom-header__search-input::placeholder {
+  color: #6f6f6a;
+  opacity: 1;
+}
+
+.custom-header__search-input:focus,
+.custom-header__search-input:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+/* Logo column */
+.custom-header__logo-col {
+  flex: 1 0 0;
+  min-width: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.custom-header__logo-heading {
+  display: contents;
+}
+
+.custom-header__logo-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: inherit;
+}
+
+.custom-header__logo-img {
+  height: 2.4rem;
+  width: auto;
+  display: block;
+  object-fit: contain;
+}
+
+.custom-header__logo-text {
+  font-family: var(--font-body-family);
+  font-weight: 600;
+  font-size: 2.4rem;
+  color: rgb(var(--color-foreground));
+  text-transform: uppercase;
+  letter-spacing: 0;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* Icons column */
+.custom-header__icons-col {
+  flex: 1 0 0;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 2.4rem;
+}
+
+/* Region selector */
+.custom-header__region-selector {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: default;
+}
+
+.custom-header__region-text {
+  font-family: var(--font-body-family);
+  font-weight: 500;
+  font-size: 1.2rem;
+  color: rgb(var(--color-foreground));
+  line-height: 1.6rem;
+  white-space: nowrap;
+}
+
+.custom-header__region-chevron {
+  display: flex;
+  align-items: center;
+  color: rgb(var(--color-foreground));
+}
+
+.custom-header__region-chevron svg {
+  width: 1.6rem;
+  height: 1.6rem;
+}
+
+/* Shared icon button */
+.custom-header__icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  position: relative;
+  color: rgb(var(--color-foreground));
+  text-decoration: none;
+  flex-shrink: 0;
+  transition: opacity 0.15s ease;
+}
+
+.custom-header__icon-btn:hover {
+  opacity: 0.7;
+}
+
+.custom-header__icon-btn svg {
+  width: 2.4rem;
+  height: 2.4rem;
+  display: block;
+}
+
+/* Cart count badge */
+.custom-header__cart-btn {
+  position: relative;
+}
+
+/* icon-cart.svg has heavy built-in padding (40x40 viewBox, glyph ~22 units tall).
+   Enlarge it to optically match the other icons; negative margin keeps the 2.4rem footprint. */
+.custom-header__cart-btn svg {
+  width: 4.2rem;
+  height: 4.2rem;
+  margin: -0.9rem;
+}
+
+.custom-header__cart-count {
+  position: absolute;
+  top: -0.4rem;
+  right: -0.5rem;
+  background-color: rgb(var(--color-foreground));
+  color: rgb(var(--color-background));
+  font-family: var(--font-body-family);
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1;
+  min-width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 99rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0.3rem;
+}
+
+/* Divider */
+.custom-header__divider {
+  width: 100%;
+  height: 0.1rem;
+  background-color: #e4e4e0;
+}
+
+/* Row 2 — nav */
+.custom-header__nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 2.4rem;
+  padding: 0.4rem 0;
+}
+
+.custom-header__nav-item,
+.custom-header__nav-featured {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-body-family);
+  font-weight: 600;
+  font-size: 1.4rem;
+  color: rgb(var(--color-foreground));
+  text-transform: uppercase;
+  text-decoration: none;
+  letter-spacing: 0;
+  line-height: 1.6rem;
+  white-space: nowrap;
+  transition: opacity 0.15s ease;
+}
+
+.custom-header__nav-item:hover,
+.custom-header__nav-featured:hover {
+  opacity: 0.7;
+}
+
+.custom-header__nav-chevron {
+  display: flex;
+  align-items: center;
+  color: rgb(var(--color-foreground));
+}
+
+.custom-header__nav-chevron svg {
+  width: 1rem;
+  height: 0.6rem;
+}
+
+/* Fire badge (BLACK FRIDAY SALE) */
+.custom-header__fire-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #d50602;
+  padding: 0.2rem;
+  flex-shrink: 0;
+}
+
+.custom-header__fire-badge svg {
+  display: block;
+}
+
+/* ────────────────────────────
+   MOBILE HEADER  (< 990px)
+   ──────────────────────────── */
+.custom-header__mobile {
+  display: flex;
+  align-items: center;
+  padding: 1.2rem 1.6rem;
+  gap: 2.4rem;
+}
+
+@media screen and (min-width: 990px) {
+  .custom-header__mobile {
+    display: none;
+  }
+}
+
+.custom-header__mobile-left {
+  flex: 1 0 0;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.custom-header__mobile-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.custom-header__logo-text--mobile {
+  font-size: 2rem;
+}
+
+.custom-header__mobile-right {
+  flex: 1 0 0;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1.6rem;
+}
+
+/* ────────────────────────────
+   MOBILE DRAWER
+   ──────────────────────────── */
+.custom-header__overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 199;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.custom-header__overlay[aria-hidden="false"] {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.custom-header__mobile-drawer {
+  position: fixed;
+  inset: 0 auto 0 0;
+  width: min(32rem, 90vw);
+  background-color: rgb(var(--color-background));
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+}
+
+.custom-header__mobile-drawer[aria-hidden="false"] {
+  transform: translateX(0);
+}
+
+.custom-header__drawer-header {
+  display: flex;
+  justify-content: flex-end;
+  padding: 1.6rem;
+  flex-shrink: 0;
+}
+
+.custom-header__drawer-nav {
+  display: flex;
+  flex-direction: column;
+  padding: 0 1.6rem 3.2rem;
+  overflow-y: auto;
+}
+
+.custom-header__drawer-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-family: var(--font-body-family);
+  font-weight: 600;
+  font-size: 1.6rem;
+  color: rgb(var(--color-foreground));
+  text-decoration: none;
+  padding: 1.6rem 0;
+  border-bottom: 0.1rem solid #e4e4e0;
+  transition: opacity 0.15s ease;
+}
+
+.custom-header__drawer-nav-item:first-child {
+  border-top: 0.1rem solid #e4e4e0;
+}
+
+.custom-header__drawer-nav-item:hover {
+  opacity: 0.7;
+}
+
+.custom-header__drawer-nav-featured {
+  text-transform: none;
+}

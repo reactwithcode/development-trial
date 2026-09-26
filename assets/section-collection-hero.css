@@ -1,0 +1,28 @@
+/* ── Custom element base ── */
+.collection-hero {
+  padding: 1.6rem 0 2.4rem;
+}
+
+@media screen and (min-width: 750px) {
+  .collection-hero {
+    padding: 1.6rem 0 3.2rem;
+  }
+}
+
+.collection-hero__title {
+  font-family: var(--font-body-family);
+  font-weight: 500;
+  font-size: 2.4rem;
+  line-height: 2.8rem;
+  letter-spacing: 0;
+  color: rgb(var(--color-foreground));
+  margin: 0;
+}
+
+@media screen and (min-width: 750px) {
+  .collection-hero__title {
+    font-size: 4.2rem;
+    line-height: 4.6rem;
+    letter-spacing: -0.05rem;
+  }
+}

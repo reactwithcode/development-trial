@@ -1,0 +1,125 @@
+quick-filters {
+  display: block;
+}
+
+.quick-filters__track-wrapper {
+  position: relative;
+  padding: 1.6rem 0;
+}
+
+@media screen and (min-width: 750px) {
+  .quick-filters__track-wrapper {
+    padding: 2rem 0;
+  }
+}
+
+.quick-filters__list {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 2.4rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  scroll-behavior: smooth;
+}
+
+.quick-filters__list::-webkit-scrollbar {
+  display: none;
+}
+
+@media screen and (min-width: 750px) {
+  .quick-filters__list {
+    flex-wrap: wrap;
+    overflow-x: visible;
+  }
+}
+
+.quick-filters__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  background: none;
+  border: none;
+  padding: 0.4rem 0;
+  cursor: pointer;
+  font-family: var(--font-body-family, inherit);
+  font-size: 1.4rem;
+  font-weight: 500;
+  letter-spacing: 0.0357em;
+  text-transform: uppercase;
+  color: #6F6F6A;
+  white-space: nowrap;
+  transition: color 0.2s ease;
+}
+
+.quick-filters__btn:hover {
+  color: #212120;
+}
+
+.quick-filters__btn.is-active {
+  color: #212120;
+}
+
+.quick-filters__dot {
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  background-color: #009951;
+  flex-shrink: 0;
+  display: block;
+}
+
+.quick-filters__dot--hidden {
+  display: none;
+}
+
+.quick-filters__fade {
+  position: absolute;
+  top: 0;
+  right: 3.2rem;
+  width: 6rem;
+  height: 100%;
+  background: linear-gradient(to right, transparent, rgb(var(--color-background)));
+  pointer-events: none;
+}
+
+.quick-filters__track-wrapper.is-at-end .quick-filters__fade {
+  display: none;
+}
+
+@media screen and (min-width: 750px) {
+  .quick-filters__fade {
+    display: none;
+  }
+}
+
+.quick-filters__scroll-btn {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.2rem;
+  height: 3.2rem;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: #212120;
+}
+
+.quick-filters__track-wrapper.is-at-end .quick-filters__scroll-btn {
+  display: none;
+}
+
+@media screen and (min-width: 750px) {
+  .quick-filters__scroll-btn {
+    display: none;
+  }
+}
