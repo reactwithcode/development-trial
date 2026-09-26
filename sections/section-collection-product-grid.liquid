@@ -1,0 +1,337 @@
+{{ 'section-collection-product-grid.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'collection-product-grid.js' | asset_url }}" defer="defer"></script>
+
+{%- liquid
+  assign sort_by = collection.sort_by | default: collection.default_sort_by
+  assign has_filters = false
+  if collection.filters.size > 0
+    assign has_filters = true
+  endif
+  assign has_active_filters = false
+  for filter in collection.filters
+    if filter.active_values.size > 0
+      assign has_active_filters = true
+    endif
+    if filter.type == 'price_range'
+      if filter.min_value.value or filter.max_value.value
+        assign has_active_filters = true
+      endif
+    endif
+  endfor
+-%}
+
+<collection-product-grid class="cpg" id="cpg-{{ section.id }}">
+
+  {%- comment -%} ── Toolbar ── {%- endcomment -%}
+  <div class="cpg__toolbar">
+    <div class="cpg__toolbar-inner">
+      {%- if has_filters -%}
+        <button
+          class="cpg__filter-btn"
+          type="button"
+          aria-expanded="false"
+          aria-controls="cpg-drawer-{{ section.id }}"
+          data-cpg-filter-btn
+        >
+          {{ 'icon-filter.svg' | inline_asset_content }}
+          <span>Filters</span>
+        </button>
+      {%- else -%}
+        <div></div>
+      {%- endif -%}
+
+      <div class="cpg__toolbar-right">
+        <span class="cpg__count">{{ collection.products_count }} products</span>
+        <div class="cpg__sort-wrap">
+          <label class="cpg__sort-label" for="cpg-sort-{{ section.id }}">Sort by</label>
+          <div class="cpg__sort-select-wrap">
+            <select
+              class="cpg__sort-select"
+              id="cpg-sort-{{ section.id }}"
+              name="sort_by"
+              data-cpg-sort
+            >
+              {%- for option in collection.sort_options -%}
+                <option
+                  value="{{ option.value }}"
+                  {%- if option.value == sort_by %} selected{%- endif -%}
+                >{{ option.name }}</option>
+              {%- endfor -%}
+            </select>
+            <span class="cpg__sort-chevron" aria-hidden="true">
+              {{ 'icon-caret.svg' | inline_asset_content }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {%- comment -%} ── Active filter chips ── {%- endcomment -%}
+  {%- if has_active_filters -%}
+    <div class="cpg__active-filters">
+      {%- for filter in collection.filters -%}
+        {%- for active_value in filter.active_values -%}
+          <a href="{{ active_value.url_to_remove }}" class="cpg__active-chip">
+            <span>{{ active_value.label }}</span>
+            {{ 'icon-close.svg' | inline_asset_content }}
+          </a>
+        {%- endfor -%}
+      {%- endfor -%}
+      <a href="{{ collection.url }}" class="cpg__active-clear">Clear all</a>
+    </div>
+  {%- endif -%}
+
+  {%- comment -%} ── Product grid + pagination ── {%- endcomment -%}
+  {%- paginate collection.products by section.settings.products_per_page -%}
+    <div class="cpg__grid">
+      {%- for product in collection.products -%}
+        {%- liquid
+          assign discount_pct = 0
+          if product.compare_at_price > product.price
+            assign price_diff = product.compare_at_price | minus: product.price
+            assign discount_pct = price_diff | times: 100 | divided_by: product.compare_at_price
+          endif
+          assign is_new_in = false
+          if product.tags contains 'new-in'
+            assign is_new_in = true
+          endif
+          assign is_low_stock = false
+          if product.total_inventory > 0 and product.total_inventory <= 5
+            assign is_low_stock = true
+          endif
+        -%}
+        <div class="cpg__card">
+          <div class="cpg__card-media">
+            <a href="{{ product.url | within: collection }}" class="cpg__card-img-link" tabindex="-1" aria-hidden="true">
+              {%- if product.featured_image -%}
+                {{
+                  product.featured_image
+                  | image_url: width: 800
+                  | image_tag:
+                    class: 'cpg__card-img',
+                    loading: 'lazy',
+                    widths: '400, 600, 800'
+                }}
+              {%- else -%}
+                {{ 'product-1' | placeholder_svg_tag: 'cpg__card-img cpg__card-img--placeholder' }}
+              {%- endif -%}
+            </a>
+
+            {%- if discount_pct > 0 -%}
+              <div class="cpg__badge cpg__badge--sale" aria-label="-{{ discount_pct }}%">
+                -{{ discount_pct }}%
+              </div>
+            {%- endif -%}
+
+            {%- if is_new_in -%}
+              <div class="cpg__badge cpg__badge--strip" aria-label="New In">
+                <span class="cpg__badge-icon" aria-hidden="true">{{ 'icon-sparkle-minimal.svg' | inline_asset_content }}</span>
+                <span class="cpg__badge-text">NEW IN</span>
+              </div>
+            {%- elsif is_low_stock -%}
+              <div class="cpg__badge cpg__badge--strip" aria-label="Low stock">
+                <span class="cpg__badge-icon" aria-hidden="true">{{ 'icon-fire.svg' | inline_asset_content }}</span>
+                <span class="cpg__badge-text">LOW STOCK</span>
+              </div>
+            {%- endif -%}
+          </div>
+
+          <div class="cpg__card-info">
+            <a href="{{ product.url | within: collection }}" class="cpg__card-name">{{ product.title }}</a>
+            <div class="cpg__card-price">
+              {%- if product.compare_at_price > product.price -%}
+                <span class="cpg__card-price--sale">{{ product.price | money }}</span>
+                <s class="cpg__card-price--compare">{{ product.compare_at_price | money }}</s>
+              {%- else -%}
+                <span class="cpg__card-price--regular">{{ product.price | money }}</span>
+              {%- endif -%}
+            </div>
+          </div>
+        </div>
+      {%- else -%}
+        <p class="cpg__empty">No products match your selection.</p>
+      {%- endfor -%}
+    </div>
+
+    {%- if paginate.pages > 1 -%}
+      <div class="cpg__pagination">
+        {%- if paginate.previous -%}
+          <a href="{{ paginate.previous.url }}" class="cpg__page-btn cpg__page-btn--prev" aria-label="Previous page">
+            <span class="cpg__page-arrow cpg__page-arrow--left" aria-hidden="true">{{ 'icon-arrow.svg' | inline_asset_content }}</span>
+          </a>
+        {%- else -%}
+          <span class="cpg__page-btn cpg__page-btn--prev cpg__page-btn--disabled" aria-disabled="true">
+            <span class="cpg__page-arrow cpg__page-arrow--left" aria-hidden="true">{{ 'icon-arrow.svg' | inline_asset_content }}</span>
+          </span>
+        {%- endif -%}
+
+        <div class="cpg__page-nums">
+          {%- for part in paginate.parts -%}
+            {%- if part.is_link -%}
+              <a href="{{ part.url }}" class="cpg__page-num" aria-label="Page {{ part.title }}">{{ part.title }}</a>
+            {%- elsif part.title == '...' -%}
+              <span class="cpg__page-num cpg__page-num--ellipsis" aria-hidden="true">&hellip;</span>
+            {%- else -%}
+              <span class="cpg__page-num cpg__page-num--active" aria-current="page">{{ part.title }}</span>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+
+        {%- if paginate.next -%}
+          <a href="{{ paginate.next.url }}" class="cpg__page-btn cpg__page-btn--next" aria-label="Next page">
+            <span class="cpg__page-arrow cpg__page-arrow--right" aria-hidden="true">{{ 'icon-arrow.svg' | inline_asset_content }}</span>
+          </a>
+        {%- else -%}
+          <span class="cpg__page-btn cpg__page-btn--next cpg__page-btn--disabled" aria-disabled="true">
+            <span class="cpg__page-arrow cpg__page-arrow--right" aria-hidden="true">{{ 'icon-arrow.svg' | inline_asset_content }}</span>
+          </span>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  {%- endpaginate -%}
+
+  {%- comment -%} ── Filter overlay ── {%- endcomment -%}
+  <div
+    class="cpg__overlay"
+    aria-hidden="true"
+    data-cpg-overlay
+  ></div>
+
+  {%- comment -%} ── Filter drawer ── {%- endcomment -%}
+  {%- if has_filters -%}
+    <div
+      class="cpg__drawer"
+      aria-hidden="true"
+      id="cpg-drawer-{{ section.id }}"
+      role="dialog"
+      aria-label="Filters"
+      data-cpg-drawer
+    >
+      <div class="cpg__drawer-header">
+        <h3 class="cpg__drawer-title">Filters</h3>
+        <button
+          class="cpg__drawer-close"
+          type="button"
+          aria-label="Close filters"
+          data-cpg-close
+        >
+          {{ 'icon-close.svg' | inline_asset_content }}
+        </button>
+      </div>
+
+      <form
+        class="cpg__drawer-form"
+        action="{{ collection.url }}"
+        method="get"
+      >
+        <input type="hidden" name="sort_by" value="{{ sort_by }}">
+
+        <div class="cpg__drawer-filters">
+          {%- for filter in collection.filters -%}
+            <div class="cpg__accordion">
+              <button
+                class="cpg__accordion-trigger"
+                type="button"
+                aria-expanded="true"
+                aria-controls="cpg-filter-{{ forloop.index }}-{{ section.id }}"
+                data-cpg-accordion-trigger
+              >
+                <span class="cpg__accordion-label">{{ filter.label }}</span>
+                <span class="cpg__accordion-chevron" aria-hidden="true">{{ 'icon-caret.svg' | inline_asset_content }}</span>
+              </button>
+
+              <div
+                class="cpg__accordion-panel"
+                id="cpg-filter-{{ forloop.index }}-{{ section.id }}"
+              >
+                {%- if filter.type == 'list' -%}
+                  <ul class="cpg__filter-list" role="list">
+                    {%- for filter_value in filter.values -%}
+                      <li class="cpg__filter-item">
+                        <label class="cpg__filter-label">
+                          <input
+                            class="cpg__filter-checkbox"
+                            type="checkbox"
+                            name="{{ filter.param_name }}"
+                            value="{{ filter_value.value | escape }}"
+                            {%- if filter_value.active %} checked{%- endif %}
+                          >
+                          <span class="cpg__filter-text">{{ filter_value.label }}</span>
+                          <span class="cpg__filter-count">({{ filter_value.count }})</span>
+                        </label>
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+
+                {%- elsif filter.type == 'price_range' -%}
+                  <div class="cpg__price-range">
+                    <div class="cpg__price-field">
+                      <span>From</span>
+                      <input
+                        class="cpg__price-input"
+                        type="number"
+                        name="filter.v.price.gte"
+                        min="0"
+                        max="{{ filter.range_max | round: 0 }}"
+                        placeholder="{{ filter.range_min | round: 0 }}"
+                        {%- if filter.min_value.value %} value="{{ filter.min_value.value | round: 0 }}"{%- endif %}
+                      >
+                    </div>
+                    <div class="cpg__price-field">
+                      <span>To</span>
+                      <input
+                        class="cpg__price-input"
+                        type="number"
+                        name="filter.v.price.lte"
+                        min="0"
+                        max="{{ filter.range_max | round: 0 }}"
+                        placeholder="{{ filter.range_max | round: 0 }}"
+                        {%- if filter.max_value.value %} value="{{ filter.max_value.value | round: 0 }}"{%- endif %}
+                      >
+                    </div>
+                  </div>
+                {%- endif -%}
+              </div>
+            </div>
+          {%- endfor -%}
+        </div>
+
+        <div class="cpg__drawer-footer">
+          <a
+            href="{{ collection.url }}"
+            class="cpg__btn cpg__btn--secondary"
+          >Reset</a>
+          <button type="submit" class="cpg__btn cpg__btn--primary">
+            View {{ collection.products_count }} products
+          </button>
+        </div>
+      </form>
+    </div>
+  {%- endif -%}
+
+</collection-product-grid>
+
+{% schema %}
+{
+  "name": "Collection Product Grid",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "label": "Products per page",
+      "min": 8,
+      "max": 48,
+      "step": 4,
+      "default": 16
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection Product Grid"
+    }
+  ]
+}
+{% endschema %}
