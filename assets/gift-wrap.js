@@ -8,7 +8,7 @@
     const atLimit = count >= parseInt(input.getAttribute('maxlength'), 10);
     counter.querySelector('[data-gift-wrap-count]').textContent = count;
     counter.classList.toggle('tw-text-red-600', atLimit);
-    counter.classList.toggle('tw-text-foreground/75', !atLimit);
+    counter.classList.toggle('tw-text-figma-muted', !atLimit);
   };
 
   if (!customElements.get('gift-wrap-pdp')) {

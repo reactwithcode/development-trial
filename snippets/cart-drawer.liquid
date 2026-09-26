@@ -10,6 +10,9 @@
 
 <script src="{{ 'cart.js' | asset_url }}" defer="defer"></script>
 <script src="{{ 'quantity-popover.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'cart-quantity-select.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'free-shipping-bar.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'cart-recommendations.js' | asset_url }}" defer="defer"></script>
 
 <style>
   .drawer {
@@ -18,7 +21,7 @@
 </style>
 
 <cart-drawer class="drawer{% if cart == empty %} is-empty{% endif %}">
-  <div id="CartDrawer" class="cart-drawer">
+  <div id="CartDrawer" class="cart-drawer cart-drawer--figma">
     <div id="CartDrawer-Overlay" class="cart-drawer__overlay"></div>
     <div
       class="drawer__inner gradient color-{{ settings.cart_color_scheme }}"
@@ -62,7 +65,7 @@
         </div>
       {%- endif -%}
       <div class="drawer__header">
-        <h2 class="drawer__heading">{{ 'sections.cart.title' | t }}</h2>
+        <h2 class="drawer__heading">{{ 'cart_drawer.title' | t }}</h2>
         <button
           class="drawer__close"
           type="button"
@@ -81,6 +84,10 @@
           class=" is-empty"
         {% endif %}
       >
+        {%- comment -%} Lives inside cart-drawer-items so both of Dawn's re-render paths refresh it. {%- endcomment -%}
+        {%- if settings.show_free_shipping_bar and settings.free_shipping_threshold > 0 and cart != empty -%}
+          {%- render 'free-shipping-bar', cart: cart -%}
+        {%- endif -%}
         <form
           action="{{ routes.cart_url }}"
           id="CartDrawer-Form"
@@ -91,7 +98,8 @@
             {%- if cart != empty -%}
               <div class="drawer__cart-items-wrapper">
                 <table class="cart-items" role="table">
-                  <thead role="rowgroup">
+                  {%- comment -%} Visually hidden (not removed): cells reference these column ids via headers="". {%- endcomment -%}
+                  <thead class="visually-hidden" role="rowgroup">
                     <tr role="row">
                       <th id="CartDrawer-ColumnProductImage" role="columnheader">
                         <span class="visually-hidden">{{ 'sections.cart.headings.image' | t }}</span>
@@ -119,12 +127,13 @@
                   </thead>
 
                   <tbody role="rowgroup">
+                    {%- assign rendered_item_count = 0 -%}
                     {%- for item in cart.items -%}
                     {%- comment -%} Gift Wrap lines carry _parent_key and render inside their parent's gift wrap row instead. {%- endcomment -%}
                     {%- unless item.properties._parent_key != blank -%}
                       <tr
                         id="CartDrawer-Item-{{ item.index | plus: 1 }}"
-                        class="cart-item{% if item.parent_relationship.parent != null %} cart-item__nested-line{% endif %}"
+                        class="cart-item{% if item.parent_relationship.parent != null %} cart-item__nested-line{% endif %}{% if rendered_item_count > 0 %} cart-item--divided{% endif %}"
                         role="row"
                         {% if item.parent_relationship.parent != null %}
                           aria-label="{{- 'products.product.nested_label' | t: title: item.product.title, parent_title: item.parent_relationship.parent.title | escape -}}"
@@ -286,6 +295,11 @@
                           if item.variant.quantity_price_breaks.size > 0
                             assign has_vol_pricing = true
                           endif
+
+                          assign use_quantity_select = true
+                          if has_qty_rules or has_vol_pricing or item.quantity > 10
+                            assign use_quantity_select = false
+                          endif
                         -%}
                         <td
                           class="cart-item__quantity {% if has_qty_rules or has_vol_pricing %} cart-item__quantity--info{% endif %}"
@@ -294,6 +308,14 @@
                         >
                           <quantity-popover>
                             <div class="cart-item__quantity-wrapper quantity-popover-wrapper">
+                              {%- if use_quantity_select -%}
+                                {%- render 'cart-quantity-select', item: item -%}
+                              {%- endif -%}
+                              {%- comment -%}
+                                Dawn's input stays in the DOM either way: cart.js reads its value, min, max and step.
+                                The extra wrapper carries hidden because Dawn's classes on the inner elements set display: flex.
+                              {%- endcomment -%}
+                              <div{% if use_quantity_select %} hidden{% endif %}>
                               <div class="quantity-popover-container{% if has_qty_rules or has_vol_pricing %} quantity-popover-container--hover{% endif %}">
                                 <quantity-input class="quantity cart-quantity">
                                   <button
@@ -359,6 +381,7 @@
                                   </button>
                                 </quantity-input>
                               </div>
+                              </div>
                               <cart-remove-button
                                 id="CartDrawer-Remove-{{ item.index | plus: 1 }}"
                                 data-index="{{ item.index | plus: 1 }}"
@@ -372,9 +395,7 @@
                                     class="hidden"
                                   {% endif %}
                                 >
-                                  <span class="svg-wrapper">
-                                    {{- 'icon-remove.svg' | inline_asset_content -}}
-                                  </span>
+                                  <span class="tw-underline tw-underline-offset-4">{{ 'cart_drawer.remove' | t }}</span>
                                 </button>
                               </cart-remove-button>
                             </div>
@@ -476,6 +497,7 @@
                           </quantity-popover>
                         </td>
                       </tr>
+                      {%- assign rendered_item_count = rendered_item_count | plus: 1 -%}
                       {%- assign gift_wrap_item = nil -%}
                       {%- for cart_item in cart.items -%}
                         {%- if cart_item.properties._parent_key == item.key -%}
@@ -521,9 +543,51 @@
           </details>
         {%- endif -%}
 
-        <!-- Start blocks -->
-        <!-- Subtotals -->
+        {%- if settings.show_cart_recommendations and cart != empty -%}
+          {%- liquid
+            for cart_item in cart.items
+              if cart_item.properties._parent_key == blank
+                assign recommendation_source = cart_item
+                break
+              endif
+            endfor
+          -%}
+          {%- if recommendation_source -%}
+            {%- comment -%} Lazy-loaded by cart-recommendations.js; stays hidden until products come back. {%- endcomment -%}
+            <cart-recommendations
+              data-product-id="{{ recommendation_source.product_id }}"
+              data-url="{{ routes.product_recommendations_url }}"
+              data-section-id="cart-recommendations"
+              hidden
+            >
+              <div class="tw-flex tw-flex-col tw-gap-4 tw-py-6">
+                <div class="tw-flex tw-items-center tw-gap-3">
+                  <h2 class="tw-m-0 tw-flex-1 tw-border-0 tw-border-b tw-border-solid tw-border-figma-line tw-pb-2 tw-font-figma tw-text-figma-body tw-font-normal tw-text-figma-ink">
+                    {{ settings.cart_recommendations_heading | escape }}
+                  </h2>
+                  <div class="tw-flex tw-gap-2">
+                    {%- for direction in (1..2) -%}
+                      <button
+                        type="button"
+                        class="tw-flex tw-h-8 tw-w-8 tw-cursor-pointer tw-items-center tw-justify-center tw-rounded-full tw-border tw-border-solid tw-border-figma-line tw-bg-white tw-p-0 tw-text-figma-ink disabled:tw-cursor-default disabled:tw-opacity-40"
+                        data-direction="{% if forloop.first %}previous{% else %}next{% endif %}"
+                        aria-label="{% if forloop.first %}{{ 'cart_drawer.previous' | t | escape }}{% else %}{{ 'cart_drawer.next' | t | escape }}{% endif %}"
+                      >
+                        <span class="svg-wrapper tw-h-3 tw-w-3{% if forloop.first %} tw-rotate-90{% else %} -tw-rotate-90{% endif %}">
+                          {{- 'icon-caret.svg' | inline_asset_content -}}
+                        </span>
+                      </button>
+                    {%- endfor -%}
+                  </div>
+                </div>
+                <div data-cart-recommendations-list></div>
+              </div>
+            </cart-recommendations>
+          {%- endif -%}
+        {%- endif -%}
 
+        {%- comment -%} Figma grey summary panel; bleeds to the drawer edges over its 24px side padding. {%- endcomment -%}
+        <div class="-tw-mx-6 tw-flex tw-flex-col tw-gap-6 tw-bg-figma-panel tw-px-6 tw-py-8">
         <div class="cart-drawer__footer" {{ block.shopify_attributes }}>
           <div>
             {%- if cart.cart_level_discount_applications.size > 0 -%}
@@ -540,11 +604,9 @@
           </div>
 
           <div class="totals" role="status">
-            <h2 class="totals__total">{{ 'sections.cart.estimated_total' | t }}</h2>
-            <p class="totals__total-value">{{ cart.total_price | money_with_currency }}</p>
-          </div>
-
-          <small class="tax-note caption-large rte">
+            <div class="tw-flex tw-flex-col">
+              <h2 class="totals__total">{{ 'cart_drawer.subtotal' | t }}</h2>
+              <small class="tax-note caption-large rte">
             {%- if cart.duties_included and cart.taxes_included -%}
               {%- if shop.shipping_policy.body == blank -%}
                 {{ 'sections.cart.duties_and_taxes_included_shipping_at_checkout_without_policy' | t }}
@@ -582,24 +644,39 @@
                 }}
               {%- endif -%}
             {%- endif -%}
-          </small>
+              </small>
+            </div>
+            <p class="totals__total-value">{{ cart.total_price | money }}</p>
+          </div>
         </div>
 
         <!-- CTAs -->
 
-        <div class="cart__ctas" {{ block.shopify_attributes }}>
+        <div class="cart__ctas tw-flex tw-flex-col tw-items-center tw-gap-4" {{ block.shopify_attributes }}>
           <button
             type="submit"
             id="CartDrawer-Checkout"
-            class="cart__checkout-button button"
+            class="cart__checkout-button button tw-w-full"
             name="checkout"
             form="CartDrawer-Form"
             {% if cart == empty %}
               disabled
             {% endif %}
           >
-            {{ 'sections.cart.checkout' | t }}
+            {{ 'cart_drawer.checkout' | t }}
           </button>
+          <button
+            type="button"
+            class="tw-m-0 tw-cursor-pointer tw-border-0 tw-bg-transparent tw-p-0 tw-font-figma tw-text-figma-body tw-text-figma-ink tw-underline tw-underline-offset-4"
+            onclick="this.closest('cart-drawer').close()"
+          >
+            {{ 'cart_drawer.continue_shopping' | t }}
+          </button>
+        </div>
+
+        {%- if settings.show_payment_icons_cart -%}
+          {%- render 'payment-icons' -%}
+        {%- endif -%}
         </div>
       </div>
     </div>

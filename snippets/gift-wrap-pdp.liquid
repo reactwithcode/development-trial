@@ -7,6 +7,7 @@
 
   Accepts:
   - product: {Object} - The product object
+  - stock_status: {String} - Stock status markup shown to the right of the checkbox (optional)
 
   Usage:
   {% render 'gift-wrap-pdp', product: product %}
@@ -32,29 +33,33 @@
 
 <gift-wrap-pdp
   class="tw-block"
+  data-stack-gap="4"
   data-product-handle="{{ settings.gift_wrap_product_handle | escape }}"
   data-unavailable-message="{{ 'gift_wrap.unavailable' | t | escape }}"
   {% if pre_gift_wrap_item != nil %}
     data-pre-checked="true"
   {% endif %}
 >
-  <label class="tw-flex tw-cursor-pointer tw-items-center tw-gap-2" data-gift-wrap-toggle-label>
-    <input
-      type="checkbox"
-      id="gift-wrap-toggle"
-      class="visually-hidden tw-peer"
-      aria-controls="gift-wrap-form"
-      aria-expanded="{% if pre_gift_wrap_item != nil %}true{% else %}false{% endif %}"
-      {% if pre_gift_wrap_item != nil %}checked{% endif %}
-    >
-    <span class="{{ checkbox_icon_classes }} peer-checked:tw-hidden">
-      {{- 'icon-checkbox.svg' | inline_asset_content -}}
-    </span>
-    <span class="{{ checkbox_icon_classes }} tw-hidden peer-checked:tw-flex">
-      {{- 'icon-checkbox-checked.svg' | inline_asset_content -}}
-    </span>
-    <span>{{ 'gift_wrap.checkbox_label' | t: price: settings.gift_wrap_price_label }}</span>
-  </label>
+  <div class="tw-flex tw-flex-wrap tw-items-center tw-justify-between tw-gap-x-4 tw-gap-y-2">
+    <label class="tw-flex tw-cursor-pointer tw-items-center tw-gap-2" data-gift-wrap-toggle-label>
+      <input
+        type="checkbox"
+        id="gift-wrap-toggle"
+        class="visually-hidden tw-peer"
+        aria-controls="gift-wrap-form"
+        aria-expanded="{% if pre_gift_wrap_item != nil %}true{% else %}false{% endif %}"
+        {% if pre_gift_wrap_item != nil %}checked{% endif %}
+      >
+      <span class="{{ checkbox_icon_classes }} peer-checked:tw-hidden">
+        {{- 'icon-checkbox.svg' | inline_asset_content -}}
+      </span>
+      <span class="{{ checkbox_icon_classes }} tw-hidden peer-checked:tw-flex">
+        {{- 'icon-checkbox-checked.svg' | inline_asset_content -}}
+      </span>
+      <span>{{ 'gift_wrap.checkbox_label' | t: price: settings.gift_wrap_price_label }}</span>
+    </label>
+    {{ stock_status }}
+  </div>
 
   {%- comment -%} The hidden attribute sits on a wrapper with no display utility so it is not overridden. {%- endcomment -%}
   <div id="gift-wrap-form" {% unless pre_gift_wrap_item != nil %}hidden aria-hidden="true"{% endunless %}>

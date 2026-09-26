@@ -58,7 +58,7 @@
     </a>
     <ul
       id="Slider-Gallery-{{ section.id }}"
-      class="product__media-list contains-media grid grid--peek list-unstyled slider slider--mobile"
+      class="product__media-list contains-media grid grid--peek list-unstyled slider slider--tablet"
       role="list"
     >
       {%- if product.selected_or_first_available_variant.featured_media != null -%}
@@ -125,7 +125,7 @@
         {%- endunless -%}
       {%- endfor -%}
     </ul>
-    <div class="slider-buttons quick-add-hidden{% if hide_mobile_slider %} small-hide{% endif %}">
+    <div class="slider-buttons quick-add-hidden{% if hide_mobile_slider %} small-hide medium-hide{% endif %}">
       <button
         type="button"
         class="slider-button slider-button--prev"
@@ -136,12 +136,17 @@
           {{- 'icon-caret.svg' | inline_asset_content -}}
         </span>
       </button>
-      <div class="slider-counter caption">
+      {%- comment -%} Figma shows dots; Dawn's numeric counter stays for screen readers and SliderComponent. {%- endcomment -%}
+      <div class="slider-counter caption visually-hidden">
         <span class="slider-counter--current">1</span>
         <span aria-hidden="true"> / </span>
         <span class="visually-hidden">{{ 'general.slider.of' | t }}</span>
         <span class="slider-counter--total">{{ media_count }}</span>
       </div>
+      <slider-dots
+        class="tw-flex tw-items-center tw-gap-2.5 tw-px-2"
+        data-label="{{ 'general.slider.go_to_slide' | t | escape }}"
+      ></slider-dots>
       <button
         type="button"
         class="slider-button slider-button--next"
@@ -183,7 +188,7 @@
   -%}
     <slider-component
       id="GalleryThumbnails-{{ section.id }}"
-      class="thumbnail-slider slider-mobile-gutter quick-add-hidden{% unless section.settings.gallery_layout contains 'thumbnail' %} medium-hide large-up-hide{% endunless %}{% if section.settings.mobile_thumbnails != 'show' %} small-hide{% endif %}{% if media_count <= 3 %} thumbnail-slider--no-slide{% endif %}"
+      class="thumbnail-slider slider-mobile-gutter quick-add-hidden medium-hide{% unless section.settings.gallery_layout contains 'thumbnail' %} large-up-hide{% endunless %}{% if section.settings.mobile_thumbnails != 'show' %} small-hide{% endif %}{% if media_count <= 3 %} thumbnail-slider--no-slide{% endif %}"
     >
       <button
         type="button"

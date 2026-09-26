@@ -20,7 +20,7 @@
   assign gift_to = gift_wrap_item.properties._gift_to
   assign gift_from = gift_wrap_item.properties._gift_from
   assign gift_message = gift_wrap_item.properties._gift_message
-  assign link_button_classes = 'tw-relative tw-m-0 tw-cursor-pointer tw-border-0 tw-bg-transparent tw-p-0 tw-font-body tw-text-sm tw-text-foreground after:tw-absolute after:-tw-inset-3'
+  assign link_button_classes = 'tw-relative tw-m-0 tw-cursor-pointer tw-border-0 tw-bg-transparent tw-p-0 tw-font-figma tw-text-figma-small tw-text-figma-ink after:tw-absolute after:-tw-inset-3'
 
   assign to_label = 'gift_wrap.to_label' | t
   assign from_label = 'gift_wrap.from_label' | t
@@ -28,10 +28,10 @@
 -%}
 
 {%- comment -%} Block display stops Dawn's .cart-item grid and table layout from squeezing the row into one column. {%- endcomment -%}
-<tr class="tw-block">
+<tr class="cart-item--gift-wrap tw-block">
   <td colspan="3" class="tw-block" role="cell">
     <gift-wrap-cart-item
-      class="background-secondary tw-block tw-px-4 tw-py-3"
+      class="tw-block tw-bg-figma-panel tw-px-4 tw-py-3"
       data-gift-wrap-key="{{ gift_wrap_item.key }}"
       data-parent-key="{{ item.key }}"
       data-gift-to="{{ gift_to | escape }}"
@@ -72,7 +72,7 @@
         </button>
       </div>
 
-      <p class="gift-wrap-cart-item__summary tw-m-0 tw-mt-1 tw-text-sm tw-text-foreground/75">
+      <p class="gift-wrap-cart-item__summary tw-m-0 tw-mt-1 tw-text-figma-small tw-text-figma-muted">
         {%- if gift_to != blank -%}
           {{ 'gift_wrap.summary_to' | t: name: gift_to }}
         {%- endif -%}

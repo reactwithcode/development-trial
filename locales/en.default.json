@@ -63,6 +63,7 @@
       "of": "of",
       "next_slide": "Slide right",
       "previous_slide": "Slide left",
+      "go_to_slide": "Go to slide [index]",
       "name": "Slider"
     }
   },
@@ -115,6 +116,8 @@
   },
   "products": {
     "product": {
+      "see_size_chart": "See sizing chart",
+      "stock_only_left": "Only {{ quantity }} left!",
       "add_to_cart": "Add to cart",
       "choose_options": "Choose options",
       "choose_product_options": "Choose options for {{ product_name }}",
@@ -537,6 +540,23 @@
       "send_on": "YYYY-MM-DD",
       "send_on_label": "Send on (optional)"
     }
+  },
+  "cart_drawer": {
+    "title": "Shopping Carts",
+    "remove": "Remove",
+    "subtotal": "Subtotal",
+    "checkout": "Checkout",
+    "continue_shopping": "or Continue Shopping",
+    "we_accept": "We accept",
+    "add": "Add",
+    "add_label": "Add {{ title }} to cart",
+    "previous": "Previous products",
+    "next": "Next products",
+    "free_shipping_label": "Free shipping progress"
+  },
+  "breadcrumbs": {
+    "label": "Breadcrumb",
+    "home": "Home"
   },
   "gift_wrap": {
     "checkbox_label": "Wrap as a gift? ({{ price }})",

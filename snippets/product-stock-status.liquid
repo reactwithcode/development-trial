@@ -1,0 +1,37 @@
+{% comment %}
+  Product Stock Status
+
+  Renders a low-stock message ("Only 3 left!") for the selected variant when
+  its stock is at or below the threshold, and nothing otherwise. Reuses Dawn's
+  Inventory-{section id} element id, so product-info.js refreshes it (and hides
+  it when empty) on every variant change.
+
+  Accepts:
+  - product: {Object} - The product object
+  - section_id: {String} - The product section id
+  - threshold: {Number} - Show the message at or below this stock level
+
+  Usage:
+  {% render 'product-stock-status', product: product, section_id: section.id, threshold: 5 %}
+{% endcomment %}
+
+{%- liquid
+  assign variant = product.selected_or_first_available_variant
+  assign is_low_stock = false
+  if variant.inventory_management == 'shopify' and variant.inventory_quantity > 0 and variant.inventory_quantity <= threshold
+    assign is_low_stock = true
+  endif
+-%}
+
+<p
+  id="Inventory-{{ section_id }}"
+  class="tw-m-0 tw-flex tw-shrink-0 tw-items-center tw-gap-2 tw-text-figma-small-mobile tw-text-figma-warn desktop:tw-text-figma-body{% unless is_low_stock %} hidden{% endunless %}"
+  role="status"
+>
+  {%- if is_low_stock -%}
+    <span class="tw-flex tw-h-4 tw-w-4 tw-items-center tw-justify-center tw-rounded-full tw-bg-figma-warn-soft" aria-hidden="true">
+      <span class="tw-h-2 tw-w-2 tw-rounded-full tw-bg-figma-warn"></span>
+    </span>
+    {{- 'products.product.stock_only_left' | t: quantity: variant.inventory_quantity -}}
+  {%- endif -%}
+</p>
