@@ -42,8 +42,8 @@
         "pants": {
           "type": "filter_item",
           "settings": {
-            "label": "Pants",
-            "filter_value": "Pants"
+            "label": "Tops",
+            "filter_value": "Tops"
           }
         },
         "t-shirts": {
