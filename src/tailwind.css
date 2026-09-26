@@ -289,8 +289,9 @@
     @apply tw-font-figma tw-text-figma-h6 tw-font-normal tw-text-figma-ink;
   }
 
-  /* Figma gift wrap "Update" is dark ink, not the brand purple. */
-  .cart-drawer.cart-drawer--figma .gift-wrap-cart-item__update-btn {
+  /* Figma gift wrap "Update" is dark ink, not the brand purple (drawer and cart page). */
+  .cart-drawer.cart-drawer--figma .gift-wrap-cart-item__update-btn,
+  .cart-item--gift-wrap .figma-skin .gift-wrap-cart-item__update-btn {
     --color-button: 30, 30, 30;
   }
 

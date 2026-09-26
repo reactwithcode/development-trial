@@ -1,19 +1,24 @@
 {% comment %}
   Gift Wrap Cart Item
 
-  Renders a gift wrap row below a cart item in the cart drawer. Shows a summary
-  of the gift message with an Edit button that expands an inline form for updating.
+  Renders a gift wrap row below a cart item in the cart drawer or on the cart page.
+  Shows a summary of the gift message with an Edit button that expands an inline
+  form for updating.
 
   Accepts:
   - item: {Object} - The parent cart line item
   - gift_wrap_item: {Object} - The Gift Wrap cart line item linked to this item
+  - context: {String} - 'drawer' (default) or 'page'. Keeps ids unique, since the drawer is also in the DOM on /cart
+  - colspan: {Number} - Columns the row spans in its table (optional, default: 3)
 
   Usage:
   {% render 'gift-wrap-cart-item', item: item, gift_wrap_item: gift_wrap_item %}
+  {% render 'gift-wrap-cart-item', item: item, gift_wrap_item: gift_wrap_item, context: 'page', colspan: 5 %}
 {% endcomment %}
 
 {%- liquid
-  assign field_id = 'GiftWrapCart-' | append: gift_wrap_item.key | replace: ':', '-'
+  assign context = context | default: 'drawer'
+  assign field_id = 'GiftWrapCart-' | append: context | append: '-' | append: gift_wrap_item.key | replace: ':', '-'
   assign to_id = field_id | append: '-to'
   assign from_id = field_id | append: '-from'
   assign message_id = field_id | append: '-message'
@@ -34,6 +39,13 @@
   if gift_wrap_item.properties[property_message] == blank and gift_wrap_item.properties._gift_message != blank
     assign has_legacy_properties = true
   endif
+
+  comment
+    On /cart both the page and the drawer render this row; only the page re-saves legacy lines, so the two saves don't race (a save changes the line key).
+  endcomment
+  if context == 'drawer' and template.name == 'cart'
+    assign has_legacy_properties = false
+  endif
   assign link_button_classes = 'tw-relative tw-m-0 tw-cursor-pointer tw-border-0 tw-bg-transparent tw-p-0 tw-font-figma tw-text-figma-small tw-text-figma-ink after:tw-absolute after:-tw-inset-3'
 
   assign to_label = 'gift_wrap.to_label' | t
@@ -41,11 +53,15 @@
   assign message_label = 'gift_wrap.message_label' | t
 -%}
 
-{%- comment -%} Block display stops Dawn's .cart-item grid and table layout from squeezing the row into one column. {%- endcomment -%}
-<tr class="cart-item--gift-wrap tw-block">
-  <td colspan="3" class="tw-block" role="cell">
+{%- comment -%}
+  Block display stops Dawn's .cart-item grid and table layout from squeezing the row into one column.
+  The cart page is a real table from 750px, so there the row stays a table row and spans it with colspan.
+{%- endcomment -%}
+<tr class="cart-item--gift-wrap tw-block{% if context == 'page' %} tablet:tw-table-row{% endif %}">
+  <td colspan="{{ colspan | default: 3 }}" class="tw-block{% if context == 'page' %} tablet:tw-table-cell{% endif %}" role="cell">
+    {%- comment -%} The drawer panel already carries the Figma skin; the cart page needs it on the row itself. {%- endcomment -%}
     <gift-wrap-cart-item
-      class="tw-block tw-bg-figma-panel tw-px-4 tw-py-3"
+      class="tw-block tw-bg-figma-panel tw-px-4 tw-py-3{% if context == 'page' %} figma-skin{% endif %}"
       data-gift-wrap-key="{{ gift_wrap_item.key }}"
       data-parent-key="{{ item.key }}"
       data-property-to="{{ 'gift_wrap.property_to' | t | escape }}"

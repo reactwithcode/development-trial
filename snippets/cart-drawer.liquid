@@ -512,6 +512,10 @@
                     {%- endfor -%}
                   </tbody>
                 </table>
+                {%- comment -%} On /cart the page's own cleanup handles orphans, so the two don't remove the same line twice. {%- endcomment -%}
+                {%- unless template.name == 'cart' -%}
+                  {%- render 'gift-wrap-orphan-cleanup' -%}
+                {%- endunless -%}
               </div>
             {%- endif -%}
             <p id="CartDrawer-LiveRegionText" class="visually-hidden" role="status"></p>
