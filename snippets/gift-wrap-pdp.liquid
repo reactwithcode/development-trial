@@ -1,0 +1,97 @@
+{% comment %}
+  Gift Wrap PDP
+
+  Renders a gift wrap toggle and expandable message form above the Add to Cart button.
+  When gift wrap is selected, a dedicated Gift Wrap product is added to cart alongside
+  the main product via AJAX, with message data stored as line item properties.
+
+  Accepts:
+  - product: {Object} - The product object
+
+  Usage:
+  {% render 'gift-wrap-pdp', product: product %}
+{% endcomment %}
+
+{%- if settings.gift_wrap_product_handle != blank -%}
+
+{%- comment -%} Detect if cart already has gift wrap for this product {%- endcomment -%}
+{%- assign pre_gift_wrap_item = nil -%}
+{%- for cart_item in cart.items -%}
+  {%- if cart_item.properties._parent_key != blank -%}
+    {%- for parent_check in cart.items -%}
+      {%- if parent_check.key == cart_item.properties._parent_key and parent_check.product_id == product.id -%}
+        {%- assign pre_gift_wrap_item = cart_item -%}
+        {%- break -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
+  {%- if pre_gift_wrap_item != nil -%}{%- break -%}{%- endif -%}
+{%- endfor -%}
+
+{%- assign checkbox_icon_classes = 'tw-flex tw-h-5 tw-w-5 tw-shrink-0 tw-rounded peer-focus-visible:tw-outline peer-focus-visible:tw-outline-2 peer-focus-visible:tw-outline-offset-2 peer-focus-visible:tw-outline-foreground/50' -%}
+
+<gift-wrap-pdp
+  class="tw-block"
+  data-product-handle="{{ settings.gift_wrap_product_handle | escape }}"
+  data-unavailable-message="{{ 'gift_wrap.unavailable' | t | escape }}"
+  {% if pre_gift_wrap_item != nil %}
+    data-pre-checked="true"
+  {% endif %}
+>
+  <label class="tw-flex tw-cursor-pointer tw-items-center tw-gap-2" data-gift-wrap-toggle-label>
+    <input
+      type="checkbox"
+      id="gift-wrap-toggle"
+      class="visually-hidden tw-peer"
+      aria-controls="gift-wrap-form"
+      aria-expanded="{% if pre_gift_wrap_item != nil %}true{% else %}false{% endif %}"
+      {% if pre_gift_wrap_item != nil %}checked{% endif %}
+    >
+    <span class="{{ checkbox_icon_classes }} peer-checked:tw-hidden">
+      {{- 'icon-checkbox.svg' | inline_asset_content -}}
+    </span>
+    <span class="{{ checkbox_icon_classes }} tw-hidden peer-checked:tw-flex">
+      {{- 'icon-checkbox-checked.svg' | inline_asset_content -}}
+    </span>
+    <span>{{ 'gift_wrap.checkbox_label' | t: price: settings.gift_wrap_price_label }}</span>
+  </label>
+
+  {%- comment -%} The hidden attribute sits on a wrapper with no display utility so it is not overridden. {%- endcomment -%}
+  <div id="gift-wrap-form" {% unless pre_gift_wrap_item != nil %}hidden aria-hidden="true"{% endunless %}>
+    <div class="tw-flex tw-flex-col tw-gap-4 tw-pt-4">
+      {%- assign gift_wrap_to_label = 'gift_wrap.to_label' | t -%}
+      {%- assign gift_wrap_to_placeholder = 'gift_wrap.to_placeholder' | t -%}
+      {%- assign gift_wrap_from_label = 'gift_wrap.from_label' | t -%}
+      {%- assign gift_wrap_from_placeholder = 'gift_wrap.from_placeholder' | t -%}
+      {%- assign gift_wrap_message_label = 'gift_wrap.message_label' | t -%}
+      {%- assign gift_wrap_message_placeholder = 'gift_wrap.message_placeholder' | t -%}
+      {%- assign gift_wrap_message_required = 'gift_wrap.message_required' | t -%}
+
+      {%- render 'gift-wrap-field',
+        id: 'gift-wrap-to',
+        label: gift_wrap_to_label,
+        value: pre_gift_wrap_item.properties._gift_to,
+        placeholder: gift_wrap_to_placeholder,
+        maxlength: settings.gift_wrap_char_limit_to
+      -%}
+      {%- render 'gift-wrap-field',
+        id: 'gift-wrap-from',
+        label: gift_wrap_from_label,
+        value: pre_gift_wrap_item.properties._gift_from,
+        placeholder: gift_wrap_from_placeholder,
+        maxlength: settings.gift_wrap_char_limit_from
+      -%}
+      {%- render 'gift-wrap-field',
+        id: 'gift-wrap-message',
+        label: gift_wrap_message_label,
+        value: pre_gift_wrap_item.properties._gift_message,
+        placeholder: gift_wrap_message_placeholder,
+        maxlength: settings.gift_wrap_char_limit_message,
+        multiline: true,
+        error_message: gift_wrap_message_required
+      -%}
+    </div>
+  </div>
+</gift-wrap-pdp>
+
+{%- endif -%}

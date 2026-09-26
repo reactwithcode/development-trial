@@ -537,5 +537,25 @@
       "send_on": "YYYY-MM-DD",
       "send_on_label": "Send on (optional)"
     }
+  },
+  "gift_wrap": {
+    "checkbox_label": "Wrap as a gift? ({{ price }})",
+    "to_label": "To",
+    "to_placeholder": "Recipient’s name",
+    "from_label": "From",
+    "from_placeholder": "Sender’s name",
+    "message_label": "Gift message",
+    "message_placeholder": "Type your message here",
+    "message_required": "Please enter a gift message.",
+    "summary_to": "To: {{ name }}",
+    "summary_from": "From: {{ name }}",
+    "edit": "Edit",
+    "edit_label": "Edit gift message for {{ title }}",
+    "cancel": "Cancel",
+    "cancel_label": "Cancel editing gift message",
+    "update": "Update",
+    "update_label": "Update gift message",
+    "update_error": "Something went wrong. Please try again.",
+    "unavailable": "Gift wrapping is currently unavailable"
   }
 }

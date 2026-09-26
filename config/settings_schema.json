@@ -1466,5 +1466,41 @@
         "label": "t:settings_schema.customer_accounts.settings.customer_account_menu.label"
       }
     ]
+  },
+  {
+    "name": "Gift Wrap",
+    "settings": [
+      {
+        "type": "text",
+        "id": "gift_wrap_product_handle",
+        "label": "Gift Wrap product handle",
+        "info": "Enter the handle of your Gift Wrap product in Shopify admin (e.g. gift-wrap)"
+      },
+      {
+        "type": "text",
+        "id": "gift_wrap_price_label",
+        "label": "Price label",
+        "default": "+£15",
+        "info": "Displayed in the checkbox label. Must match the actual Gift Wrap product price."
+      },
+      {
+        "type": "number",
+        "id": "gift_wrap_char_limit_to",
+        "label": "Character limit: To field",
+        "default": 50
+      },
+      {
+        "type": "number",
+        "id": "gift_wrap_char_limit_from",
+        "label": "Character limit: From field",
+        "default": 50
+      },
+      {
+        "type": "number",
+        "id": "gift_wrap_char_limit_message",
+        "label": "Character limit: Message field",
+        "default": 150
+      }
+    ]
   }
 ]
