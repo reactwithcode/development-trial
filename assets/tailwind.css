@@ -678,6 +678,19 @@
   }
 }
 
+/*
+    Desktop thumbnail galleries show one media at a time, but Dawn only makes the first <li> full width;
+    any other active one falls back to .grid__item's 50% max-width, so it shrank when its thumbnail was clicked.
+  */
+
+@media screen and (min-width: 990px) {
+  .product-layout.product--thumbnail .product__media-list .product__media-item,
+    .product-layout.product--thumbnail_slider .product__media-list .product__media-item {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
 /* Two columns start at 990px instead of Dawn's 750px, so undo Dawn's tablet column styles. */
 
 @media screen and (min-width: 750px) and (max-width: 989px) {
