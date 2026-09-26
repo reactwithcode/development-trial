@@ -197,7 +197,9 @@
         async handleCartUpdate({ cartData }) {
           if (this.isCleaningUp) return;
 
-          const cart = cartData || (await fetch('/cart.js').then((r) => r.json()));
+          // product-form publishes the /cart/add.js response (the added line, not the cart), so only
+          // trust cartData when it is a full cart.
+          const cart = cartData?.items ? cartData : await fetch('/cart.js').then((r) => r.json());
           const isGiftWrapItem = (item) =>
             item.properties && '_parent_key' in item.properties;
 
@@ -253,7 +255,10 @@
           this.handleCancel = this.handleCancel.bind(this);
           this.handleUpdate = this.handleUpdate.bind(this);
           this.handleInput = this.handleInput.bind(this);
+          this.handleChange = this.handleChange.bind(this);
 
+          // Keep gift field edits away from the cart's quantity handler (see handleChange)
+          this.addEventListener('change', this.handleChange);
           this.editBtn?.addEventListener('click', this.handleEdit);
           this.cancelBtn?.addEventListener('click', this.handleCancel);
           this.updateBtn?.addEventListener('click', this.handleUpdate);
@@ -291,6 +296,7 @@
         }
 
         disconnectedCallback() {
+          this.removeEventListener('change', this.handleChange);
           this.editBtn?.removeEventListener('click', this.handleEdit);
           this.cancelBtn?.removeEventListener('click', this.handleCancel);
           this.updateBtn?.removeEventListener('click', this.handleUpdate);
@@ -335,6 +341,13 @@
 
         handleInput(event) {
           updateGiftWrapCounter(event.target);
+        }
+
+        // <cart-items> (cart.js) treats every bubbling `change` inside it as a quantity edit and
+        // validates it — on a text field that yields "increments of undefined" and blocks input.
+        // Gift details are saved via the Update button, so the cart never needs these events.
+        handleChange(event) {
+          event.stopPropagation();
         }
 
         async handleUpdate() {

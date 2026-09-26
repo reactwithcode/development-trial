@@ -33,7 +33,7 @@
   data-filter-param="{{ filter_param | escape }}"
   id="quick-filters-{{ section.id }}"
 >
-  <div class="page-width">
+  <div class="quick-filters__inner">
     <div class="quick-filters__track-wrapper">
       <ul class="quick-filters__list" role="list">
         {%- for block in section.blocks -%}
@@ -73,7 +73,8 @@
         {%- endfor -%}
       </ul>
 
-      <div class="quick-filters__fade" aria-hidden="true"></div>
+      {%- comment -%} span, not div: base.css hides empty divs {%- endcomment -%}
+      <span class="quick-filters__fade" aria-hidden="true"></span>
 
       <button
         class="quick-filters__scroll-btn"
@@ -82,7 +83,7 @@
         tabindex="-1"
       >
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" focusable="false">
-          <path d="M6 3L11 8L6 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M10.5 8.00179L5.5 3.33512L5.5 12.6685L10.5 8.00179Z" fill="currentColor"/>
         </svg>
       </button>
     </div>

@@ -49,13 +49,19 @@
 .cpg__toolbar-right {
   display: flex;
   align-items: center;
-  gap: 1.6rem;
+  gap: 0.8rem;
+}
+
+@media screen and (min-width: 750px) {
+  .cpg__toolbar-right {
+    gap: 1.6rem;
+  }
 }
 
 .cpg__count {
   font-family: var(--font-body-family);
   font-size: 1.2rem;
-  line-height: 1.6rem;
+  line-height: 1.68rem;
   color: #6f6f6a;
   white-space: nowrap;
 }
@@ -63,62 +69,57 @@
 @media screen and (min-width: 750px) {
   .cpg__count {
     font-size: 1.4rem;
+    line-height: 1.82rem;
   }
 }
 
+/* ── Sort ──
+   Figma: "Sort by" + 16px chevron, no visible value. The select is stretched over
+   the label and made transparent, so the whole control is the tap target. */
 .cpg__sort-wrap {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 0.8rem;
+  gap: 0.4rem;
 }
 
 .cpg__sort-label {
   font-family: var(--font-body-family);
   font-size: 1.4rem;
   font-weight: 500;
-  line-height: 2rem;
-  color: rgb(var(--color-foreground));
+  line-height: 1.82rem;
+  color: #212120;
   white-space: nowrap;
 }
 
-.cpg__sort-select-wrap {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.cpg__sort-select {
-  appearance: none;
-  -webkit-appearance: none;
-  background: none;
-  border: none;
-  padding: 0 2rem 0 0;
-  font-family: var(--font-body-family);
-  font-weight: 500;
-  font-size: 1.4rem;
-  line-height: 2rem;
-  color: rgb(var(--color-foreground));
-  cursor: pointer;
-  max-width: 16rem;
-}
-
-.cpg__sort-select:focus-visible {
-  outline: 0.2rem solid rgba(var(--color-foreground), 0.5);
-  outline-offset: 0.3rem;
-}
-
 .cpg__sort-chevron {
-  position: absolute;
-  right: 0;
-  pointer-events: none;
   display: flex;
   align-items: center;
-  color: rgb(var(--color-foreground));
+  color: #212120;
 }
 
 .cpg__sort-chevron svg {
-  width: 1rem;
-  height: 0.6rem;
+  width: 1.6rem;
+  height: 1.6rem;
+}
+
+.cpg__sort-select {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+  /* 16px stops iOS Safari zooming in when the picker opens */
+  font-size: 1.6rem;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.cpg__sort-wrap:has(.cpg__sort-select:focus-visible) {
+  outline: 0.2rem solid rgba(33, 33, 32, 0.5);
+  outline-offset: 0.3rem;
 }
 
 /* ── Active filter chips ── */
@@ -218,6 +219,7 @@
 }
 
 .cpg__card-img-link {
+  position: relative;
   display: block;
   width: 100%;
   height: 100%;
@@ -228,7 +230,28 @@
   height: 100%;
   object-fit: cover;
   display: block;
-  transition: opacity 0.2s ease;
+  transition: opacity 0.4s ease, transform 0.6s ease;
+}
+
+.cpg__card-img--secondary {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+}
+
+/* ── Image hover ──
+   Products with a second image cross-fade to it; others zoom in slightly.
+   Only on devices that can hover, so taps on mobile go straight to the product. */
+@media (hover: hover) {
+  .cpg__card-media:hover .cpg__card-img--secondary {
+    opacity: 1;
+  }
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .cpg__card-media:hover .cpg__card-img-link:not(.cpg__card-img-link--has-secondary) .cpg__card-img {
+    transform: scale(1.04);
+  }
 }
 
 .cpg__card-img--placeholder {
@@ -289,8 +312,8 @@
 }
 
 .cpg__badge-icon svg {
-  width: 1.4rem;
-  height: 1.4rem;
+  width: 1.6rem;
+  height: 1.6rem;
 }
 
 .cpg__badge-text {
@@ -365,12 +388,23 @@
   text-decoration: line-through;
 }
 
-/* ── Pagination ── */
+/* ── Loading state while filters re-render ── */
+.cpg__results {
+  transition: opacity 0.2s ease;
+}
+
+.cpg.is-loading .cpg__results {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* ── Pagination ──
+   Figma: 32px outlined chevron buttons, 32px number cells, 24px gaps. */
 .cpg__pagination {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 1.2rem;
+  gap: 2.4rem;
   padding: 2.4rem 1.6rem;
   max-width: var(--page-width);
   margin: 0 auto;
@@ -378,7 +412,6 @@
 
 @media screen and (min-width: 750px) {
   .cpg__pagination {
-    gap: 2.4rem;
     padding: 2.4rem;
   }
 }
@@ -387,40 +420,33 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
+  box-sizing: border-box;
   width: 3.2rem;
   height: 3.2rem;
   border: 0.1rem solid #d6d6d2;
+  color: #212120;
   text-decoration: none;
-  color: rgb(var(--color-foreground));
-  transition: opacity 0.15s ease;
-  flex-shrink: 0;
+  transition: border-color 0.15s ease;
+}
+
+.cpg__page-btn svg {
+  display: block;
+  width: 2rem;
+  height: 2rem;
 }
 
 .cpg__page-btn:hover:not(.cpg__page-btn--disabled) {
-  opacity: 0.7;
+  border-color: #212120;
 }
 
 .cpg__page-btn--disabled {
-  opacity: 0.3;
   cursor: default;
-  pointer-events: none;
-}
-
-.cpg__page-arrow svg {
-  width: 2rem;
-  height: auto;
-}
-
-.cpg__page-arrow--left svg {
-  transform: scaleX(-1);
 }
 
 .cpg__page-nums {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
-  flex-wrap: wrap;
-  justify-content: center;
 }
 
 .cpg__page-num {
@@ -431,25 +457,33 @@
   height: 3.2rem;
   font-family: var(--font-body-family);
   font-size: 1.4rem;
-  line-height: 1;
+  font-weight: 500;
+  line-height: 1.82rem;
+  letter-spacing: 0;
   text-decoration: none;
   color: #9e9e98;
   transition: color 0.15s ease;
 }
 
 .cpg__page-num:hover {
-  color: rgb(var(--color-foreground));
+  color: #212120;
 }
 
 .cpg__page-num--active {
-  color: rgb(var(--color-foreground));
-  font-weight: 500;
+  color: #212120;
 }
 
+/* Figma DotsThree: three 2px squares, 3px apart, sitting on the text baseline */
 .cpg__page-num--ellipsis {
-  width: auto;
-  pointer-events: none;
-  color: #9e9e98;
+  align-items: flex-end;
+  gap: 0.3rem;
+  padding: 1rem 0.6rem;
+}
+
+.cpg__page-dot {
+  width: 0.2rem;
+  height: 0.2rem;
+  background-color: #9e9e98;
 }
 
 /* ── Filter overlay ── */
@@ -468,12 +502,21 @@
   pointer-events: auto;
 }
 
-/* ── Filter drawer ── */
+/* base.css hides empty divs (div:empty) — the overlay is intentionally empty */
+.cpg__overlay:empty {
+  display: block;
+}
+
+/* ── Filter drawer ──
+   Figma: Side Draw — 400px wide on desktop, full width on mobile.
+   Horizontal padding 16px mobile / 24px desktop throughout. */
 .cpg__drawer {
+  --cpg-drawer-gutter: 1.6rem;
   position: fixed;
   inset: 0 auto 0 0;
-  width: min(32rem, 92vw);
-  background-color: rgb(var(--color-background));
+  width: 100%;
+  background-color: #fbfaf8;
+  color: #212120;
   z-index: 200;
   display: flex;
   flex-direction: column;
@@ -484,6 +527,7 @@
 
 @media screen and (min-width: 750px) {
   .cpg__drawer {
+    --cpg-drawer-gutter: 2.4rem;
     width: 40rem;
   }
 }
@@ -492,65 +536,137 @@
   transform: translateX(0);
 }
 
+.cpg__drawer:focus {
+  outline: none;
+}
+
 .cpg__drawer-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 1.6rem;
+  gap: 0.4rem;
+  padding: 1.6rem var(--cpg-drawer-gutter);
   flex-shrink: 0;
   border-bottom: 0.1rem solid #e4e4e0;
 }
 
-@media screen and (min-width: 750px) {
-  .cpg__drawer-header {
-    padding: 2.4rem;
-  }
-}
-
 .cpg__drawer-title {
+  flex: 1 1 auto;
   font-family: var(--font-body-family);
   font-size: 2rem;
   font-weight: 500;
   line-height: 2.4rem;
-  color: rgb(var(--color-foreground));
+  letter-spacing: 0;
+  color: #212120;
   margin: 0;
+}
+
+@media screen and (min-width: 750px) {
+  .cpg__drawer-title {
+    line-height: 2.6rem;
+  }
+}
+
+/* "[1]" active-count marker next to titles */
+.cpg__count-sup {
+  font-size: 0.5em;
+  line-height: 0;
+  margin-left: 0.4rem;
+  vertical-align: super;
 }
 
 .cpg__drawer-close {
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  flex-shrink: 0;
   background: none;
   border: none;
-  padding: 0.4rem;
+  padding: 0;
   cursor: pointer;
-  color: rgb(var(--color-foreground));
-  transition: opacity 0.15s ease;
-}
-
-.cpg__drawer-close:hover {
-  opacity: 0.7;
+  color: #212120;
 }
 
 .cpg__drawer-close svg {
-  width: 1.8rem;
-  height: 1.8rem;
+  width: 2.4rem;
+  height: 2.4rem;
 }
 
 .cpg__drawer-form {
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  min-height: 0;
 }
 
-.cpg__drawer-filters {
+.cpg__drawer-body {
   flex: 1 1 auto;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
 
+/* ── Selected filters ── */
+.cpg__selected {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  padding: 1.2rem var(--cpg-drawer-gutter) 0.8rem;
+}
+
+@media screen and (min-width: 750px) {
+  .cpg__selected {
+    padding-top: 1.6rem;
+  }
+}
+
+.cpg__selected-label {
+  font-family: var(--font-body-family);
+  font-size: 1.2rem;
+  font-weight: 500;
+  line-height: 1.68rem;
+  letter-spacing: 0;
+  color: #6f6f6a;
+  margin: 0;
+}
+
+.cpg__selected-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+.cpg__selected-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.8rem;
+  border: 0.1rem solid #e4e4e0;
+  font-family: var(--font-body-family);
+  font-size: 1.2rem;
+  font-weight: 500;
+  line-height: 1.68rem;
+  letter-spacing: 0;
+  color: #212120;
+  text-decoration: none;
+  transition: border-color 0.15s ease;
+}
+
+.cpg__selected-chip:hover {
+  border-color: #212120;
+}
+
+.cpg__selected-chip svg {
+  width: 1.6rem;
+  height: 1.6rem;
+  flex-shrink: 0;
+}
+
 /* ── Accordion ── */
+.cpg__accordions {
+  padding: 0 var(--cpg-drawer-gutter);
+}
+
 .cpg__accordion {
   border-bottom: 0.1rem solid #e4e4e0;
 }
@@ -559,50 +675,34 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 1.2rem;
   width: 100%;
-  padding: 1.6rem;
+  padding: 1.6rem 0;
   background: none;
   border: none;
   cursor: pointer;
   text-align: left;
-  gap: 1.6rem;
-  transition: opacity 0.15s ease;
-}
-
-@media screen and (min-width: 750px) {
-  .cpg__accordion-trigger {
-    padding: 1.6rem 2.4rem;
-  }
-}
-
-.cpg__accordion-trigger:hover {
-  opacity: 0.7;
+  color: #212120;
 }
 
 .cpg__accordion-label {
   font-family: var(--font-body-family);
   font-size: 1.4rem;
   font-weight: 500;
-  line-height: 2rem;
-  color: rgb(var(--color-foreground));
+  line-height: 1.82rem;
+  letter-spacing: 0;
+  color: #212120;
 }
 
-.cpg__accordion-chevron {
-  display: flex;
-  align-items: center;
-  color: rgb(var(--color-foreground));
+.cpg__accordion-icon {
+  width: 2rem;
+  height: 2rem;
   flex-shrink: 0;
-  transition: transform 0.2s ease;
 }
 
-.cpg__accordion-chevron svg {
-  width: 1rem;
-  height: 0.6rem;
-  transition: transform 0.2s ease;
-}
-
-.cpg__accordion-trigger[aria-expanded="true"] .cpg__accordion-chevron svg {
-  transform: rotate(180deg);
+/* Plus when closed, minus when open */
+.cpg__accordion-trigger[aria-expanded="true"] .cpg__accordion-icon-v {
+  display: none;
 }
 
 .cpg__accordion-trigger[aria-expanded="false"] + .cpg__accordion-panel {
@@ -610,61 +710,82 @@
 }
 
 .cpg__accordion-panel {
-  padding: 0 1.6rem 1.6rem;
+  padding-bottom: 1.6rem;
 }
 
-@media screen and (min-width: 750px) {
-  .cpg__accordion-panel {
-    padding: 0 2.4rem 1.6rem;
-  }
-}
-
-/* ── Filter list ── */
+/* ── Filter options ── */
 .cpg__filter-list {
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: 1.6rem;
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
-.cpg__filter-label {
+.cpg__filter-option {
   display: flex;
   align-items: center;
-  gap: 1.2rem;
+  gap: 0.8rem;
   cursor: pointer;
-  padding: 0.6rem 0;
-  transition: opacity 0.15s ease;
 }
 
-.cpg__filter-label:hover {
-  opacity: 0.7;
+.cpg__filter-option.is-disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
 }
 
-.cpg__filter-checkbox {
-  width: 1.6rem;
-  height: 1.6rem;
-  border: 0.1rem solid #d6d6d2;
-  border-radius: 0;
-  cursor: pointer;
+.cpg__filter-input {
+  appearance: none;
+  -webkit-appearance: none;
+  position: relative;
+  width: 2rem;
+  height: 2rem;
+  margin: 0;
   flex-shrink: 0;
-  accent-color: rgb(var(--color-foreground));
+  background: none;
+  cursor: inherit;
+}
+
+/* Radio — Figma Icon/Radio: 14px ring, 8.33px dot. One value per filter group. */
+.cpg__filter-input::before {
+  content: '';
+  position: absolute;
+  inset: 0.3rem;
+  border: 0.1rem solid #d6d6d2;
+  border-radius: 50%;
+  box-sizing: border-box;
+}
+
+.cpg__filter-input:checked::before {
+  border-color: #212120;
+}
+
+.cpg__filter-input:checked::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0.833rem;
+  height: 0.833rem;
+  border-radius: 50%;
+  background-color: #212120;
+  transform: translate(-50%, -50%);
+}
+
+.cpg__filter-input:focus-visible {
+  outline: 0.2rem solid rgba(33, 33, 32, 0.5);
+  outline-offset: 0.1rem;
 }
 
 .cpg__filter-text {
+  flex: 1 1 auto;
   font-family: var(--font-body-family);
   font-size: 1.4rem;
-  line-height: 2rem;
-  color: rgb(var(--color-foreground));
-  flex: 1;
-}
-
-.cpg__filter-count {
-  font-family: var(--font-body-family);
-  font-size: 1.2rem;
-  line-height: 1.6rem;
-  color: #9e9e98;
+  font-weight: 500;
+  line-height: 1.82rem;
+  letter-spacing: 0;
+  color: #212120;
 }
 
 /* ── Price range ── */
@@ -683,69 +804,75 @@
 .cpg__price-field span {
   font-family: var(--font-body-family);
   font-size: 1.2rem;
+  font-weight: 500;
+  line-height: 1.68rem;
   color: #6f6f6a;
 }
 
 .cpg__price-input {
   width: 100%;
-  padding: 0.8rem;
+  padding: 0.8rem 1.2rem;
   border: 0.1rem solid #d6d6d2;
+  border-radius: 0;
   background: none;
   font-family: var(--font-body-family);
   font-size: 1.4rem;
-  color: rgb(var(--color-foreground));
+  line-height: 1.82rem;
+  color: #212120;
 }
 
 .cpg__price-input:focus-visible {
-  outline: 0.2rem solid rgba(var(--color-foreground), 0.5);
-  outline-offset: 0.2rem;
+  outline: 0.2rem solid rgba(33, 33, 32, 0.5);
+  outline-offset: 0.1rem;
 }
 
 /* ── Drawer footer ── */
 .cpg__drawer-footer {
   display: flex;
+  flex-direction: column;
   gap: 0.8rem;
-  padding: 1.6rem;
+  padding: 1.6rem var(--cpg-drawer-gutter);
   flex-shrink: 0;
-  border-top: 0.1rem solid #e4e4e0;
-}
-
-@media screen and (min-width: 750px) {
-  .cpg__drawer-footer {
-    padding: 2.4rem;
-  }
+  background-color: #fbfaf8;
 }
 
 .cpg__btn {
-  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1.2rem;
+  gap: 1.2rem;
+  height: 4.8rem;
+  padding: 1.2rem 2.4rem;
   font-family: var(--font-body-family);
   font-size: 1.4rem;
-  font-weight: 500;
-  line-height: 2rem;
-  text-decoration: none;
-  border: none;
-  cursor: pointer;
-  text-align: center;
-  transition: opacity 0.15s ease;
+  font-weight: 600;
+  line-height: 1.6rem;
   letter-spacing: 0;
+  text-transform: uppercase;
+  text-decoration: none;
+  text-align: center;
   white-space: nowrap;
-}
-
-.cpg__btn:hover {
-  opacity: 0.8;
+  border: 0.1rem solid transparent;
+  border-radius: 0;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
 }
 
 .cpg__btn--primary {
-  background-color: rgb(var(--color-foreground));
-  color: rgb(var(--color-background));
+  background-color: #212120;
+  color: #ffffff;
+}
+
+.cpg__btn--primary:hover {
+  background-color: #3a3a38;
 }
 
 .cpg__btn--secondary {
   background-color: transparent;
-  color: rgb(var(--color-foreground));
-  border: 0.1rem solid rgb(var(--color-foreground));
+  color: #212120;
+  border-color: #d6d6d2;
+}
+
+.cpg__btn--secondary:hover {
+  border-color: #212120;
 }

@@ -225,7 +225,15 @@
       "sort_button": "Sort",
       "sort_by_label": "Sort by:",
       "to": "To",
-      "clear_filter": "Remove filter"
+      "clear_filter": "Remove filter",
+      "filters_title": "Filters",
+      "sort_by": "Sort by",
+      "selected_filters": "Selected filters",
+      "close_filters": "Close filters",
+      "view_products": {
+        "one": "View {{ count }} product",
+        "other": "View {{ count }} products"
+      }
     }
   },
   "templates": {
