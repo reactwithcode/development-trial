@@ -63,8 +63,8 @@
         "quarter-zips": {
           "type": "filter_item",
           "settings": {
-            "label": "Quarter Zips",
-            "filter_value": "Quarter Zips"
+            "label": "Bags",
+            "filter_value": "Bags"
           }
         },
         "footwear": {
