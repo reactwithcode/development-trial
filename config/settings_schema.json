@@ -1466,5 +1466,103 @@
         "label": "t:settings_schema.customer_accounts.settings.customer_account_menu.label"
       }
     ]
+  },
+  {
+    "name": "Gift Wrap",
+    "settings": [
+      {
+        "type": "text",
+        "id": "gift_wrap_product_handle",
+        "label": "Gift Wrap product handle",
+        "info": "Enter the handle of your Gift Wrap product in Shopify admin (e.g. gift-wrap)"
+      },
+      {
+        "type": "text",
+        "id": "gift_wrap_price_label",
+        "label": "Price label",
+        "default": "+£15",
+        "info": "Displayed in the checkbox label. Must match the actual Gift Wrap product price."
+      },
+      {
+        "type": "number",
+        "id": "gift_wrap_char_limit_to",
+        "label": "Character limit: To field",
+        "default": 50
+      },
+      {
+        "type": "number",
+        "id": "gift_wrap_char_limit_from",
+        "label": "Character limit: From field",
+        "default": 50
+      },
+      {
+        "type": "number",
+        "id": "gift_wrap_char_limit_message",
+        "label": "Character limit: Message field",
+        "default": 150
+      }
+    ]
+  },
+  {
+    "name": "Cart drawer",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Free shipping bar"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_free_shipping_bar",
+        "label": "Show free shipping bar",
+        "default": true
+      },
+      {
+        "type": "number",
+        "id": "free_shipping_threshold",
+        "label": "Free shipping threshold",
+        "info": "In your store currency. Must match your free shipping rate in Settings > Shipping and delivery.",
+        "default": 50
+      },
+      {
+        "type": "text",
+        "id": "free_shipping_message_remaining",
+        "label": "Message below the threshold",
+        "info": "Use [amount] for what's left to spend and [threshold] for the free shipping amount.",
+        "default": "If you spend [threshold], then shipping is free"
+      },
+      {
+        "type": "text",
+        "id": "free_shipping_message_success",
+        "label": "Message once free shipping is reached",
+        "default": "You've got free shipping!"
+      },
+      {
+        "type": "header",
+        "content": "Recommendations"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_cart_recommendations",
+        "label": "Show product recommendations",
+        "info": "Uses complementary products from the Search & Discovery app, falling back to related products.",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "cart_recommendations_heading",
+        "label": "Recommendations heading",
+        "default": "You may also like"
+      },
+      {
+        "type": "header",
+        "content": "Footer"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_payment_icons_cart",
+        "label": "Show payment icons",
+        "default": true
+      }
+    ]
   }
 ]

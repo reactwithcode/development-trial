@@ -1,0 +1,55 @@
+{% comment %}
+  Gift Wrap Field
+
+  Renders a labelled gift wrap text input or textarea with a live character
+  counter. Shared by the PDP gift wrap form and the cart drawer edit form.
+
+  Accepts:
+  - id: {String} - Unique id for the input
+  - label: {String} - Visible label text
+  - value: {String} - Current value (optional)
+  - placeholder: {String} - Placeholder text (optional)
+  - maxlength: {Number} - Character limit
+  - multiline: {Boolean} - Render a textarea instead of a text input (optional)
+  - input_class: {String} - JS hook class added to the input (optional)
+  - error_message: {String} - Hidden validation message shown by JS (optional)
+
+  Usage:
+  {% render 'gift-wrap-field', id: 'gift-wrap-to', label: 'To', maxlength: 50 %}
+{% endcomment %}
+
+{%- assign control_classes = 'tw-m-0 tw-block tw-w-full tw-appearance-none tw-rounded tw-border tw-border-solid tw-border-figma-line tw-bg-white tw-px-4 tw-font-figma tw-text-figma-body tw-text-figma-ink placeholder:tw-text-figma-line' -%}
+
+<div class="tw-flex tw-flex-col tw-gap-2" data-gift-wrap-field>
+  <div class="tw-flex tw-items-baseline tw-justify-between tw-gap-4">
+    <label for="{{ id }}">{{ label }}</label>
+    <span id="{{ id }}-counter" class="tw-text-figma-small tw-text-figma-muted" data-gift-wrap-counter>
+      <span data-gift-wrap-count>{{ value | size }}</span> / {{ maxlength }}
+    </span>
+  </div>
+
+  {%- if multiline -%}
+    <textarea
+      id="{{ id }}"
+      class="{{ input_class }} {{ control_classes }} tw-h-36 tw-resize-y tw-py-3"
+      placeholder="{{ placeholder | escape }}"
+      maxlength="{{ maxlength }}"
+      aria-describedby="{{ id }}-counter"
+    >{{ value | escape }}</textarea>
+  {%- else -%}
+    <input
+      type="text"
+      id="{{ id }}"
+      class="{{ input_class }} {{ control_classes }} tw-py-2"
+      value="{{ value | escape }}"
+      placeholder="{{ placeholder | escape }}"
+      maxlength="{{ maxlength }}"
+      autocomplete="off"
+      aria-describedby="{{ id }}-counter"
+    >
+  {%- endif -%}
+
+  {%- if error_message != blank -%}
+    <p class="tw-m-0 tw-text-sm tw-text-red-600" data-gift-wrap-error hidden>{{ error_message }}</p>
+  {%- endif -%}
+</div>

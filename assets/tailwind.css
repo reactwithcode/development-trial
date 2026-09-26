@@ -51,7 +51,7 @@
   --tw-contain-size:  ;
   --tw-contain-layout:  ;
   --tw-contain-paint:  ;
-  --tw-contain-style:  
+  --tw-contain-style:  ;
 }
 
 ::backdrop {
@@ -105,67 +105,1223 @@
   --tw-contain-size:  ;
   --tw-contain-layout:  ;
   --tw-contain-paint:  ;
-  --tw-contain-style:  
+  --tw-contain-style:  ;
 }
 
-.tw-mt-4 {
-  margin-top: 1rem
+/*
+    Figma skin: Balsamiq Sans and the Figma palette, applied only to the product section
+    (.figma-skin) and the cart drawer panel. Re-pointing Dawn's own variables means Dawn
+    buttons, links and stars inside the scope pick up the Figma colours automatically.
+  */
+
+.figma-skin,
+  .cart-drawer.cart-drawer--figma .drawer__inner {
+  --color-foreground: 30, 30, 30;
+  /* figma-ink #1E1E1E */
+  --color-button: 89, 0, 255;
+  /* figma-brand #5900FF */
+  --color-button-text: 255, 255, 255;
+  --color-link: 89, 0, 255;
+  --font-body-family: 'Balsamiq Sans', sans-serif;
+  --font-body-style: normal;
+  --font-body-weight: 400;
+  --font-heading-family: 'Balsamiq Sans', sans-serif;
+  --font-heading-style: normal;
+  --font-heading-weight: 400;
+  --buttons-radius: 0.4rem;
+  --buttons-radius-outset: 0.4rem;
+  font-family: "Balsamiq Sans", sans-serif;
+  font-size: 1.4rem;
+  line-height: 2.2rem;
+  letter-spacing: 0.01em;
+  --tw-text-opacity: 1;
+  color: rgb(30 30 30 / var(--tw-text-opacity, 1));
+}
+
+@media (min-width: 990px) {
+  .figma-skin,
+  .cart-drawer.cart-drawer--figma .drawer__inner {
+    font-size: 1.6rem;
+    line-height: 2.6rem;
+    letter-spacing: 0.01em;
+  }
+}
+
+.figma-skin .button,
+  .cart-drawer.cart-drawer--figma .button {
+  font-family: "Balsamiq Sans", sans-serif;
+  font-size: 1.6rem;
+  line-height: 2rem;
+  letter-spacing: 0.02em;
+}
+
+.figma-skin .\!button,
+  .cart-drawer.cart-drawer--figma .\!button {
+  font-family: "Balsamiq Sans", sans-serif;
+  font-size: 1.6rem;
+  line-height: 2rem;
+  letter-spacing: 0.02em;
+}
+
+/* Buy box rhythm: 32px between groups on mobile, 40px from 990px; tighter inside a group via data-stack-gap. */
+
+.product-info-stack.product__info-container > * + * {
+  margin-bottom: 0px;
+  margin-top: 3.2rem;
+}
+
+@media (min-width: 990px) {
+  .product-info-stack.product__info-container > * + * {
+    margin-top: 4rem;
+  }
+}
+
+.product-info-stack.product__info-container > [data-stack-gap='2'] {
+  margin-top: 0.4rem;
+}
+
+@media (min-width: 990px) {
+  .product-info-stack.product__info-container > [data-stack-gap='2'] {
+    margin-top: 0.8rem;
+  }
+}
+
+.product-info-stack.product__info-container > [data-stack-gap='4'] {
+  margin-top: 1.6rem;
+}
+
+.product-info-stack.product__info-container > .product__accordion + .product__accordion {
+  margin-top: 0px;
+}
+
+.product-info-stack.product__info-container > .product__title {
+  margin-bottom: 0px;
+}
+
+/* Dawn gives these their own 2.5rem margins; keep them on the stack rhythm instead. */
+
+.product-info-stack.product__info-container > .product__description {
+  margin-bottom: 0px;
+  margin-top: 3.2rem;
+  --tw-text-opacity: 1;
+  color: rgb(117 117 117 / var(--tw-text-opacity, 1));
+}
+
+@media (min-width: 990px) {
+  .product-info-stack.product__info-container > .product__description {
+    margin-top: 4rem;
+  }
+}
+
+.product-info-stack.product__info-container .product-form {
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+/* Figma H5: bold title and regular price, 22px on mobile, 32px from 990px. */
+
+.figma-skin .product__title h1 {
+  margin: 0px;
+  font-family: "Balsamiq Sans", sans-serif;
+  font-size: 2.2rem;
+  line-height: 2.9rem;
+  font-weight: 700;
+  letter-spacing: 0em;
+  --tw-text-opacity: 1;
+  color: rgb(30 30 30 / var(--tw-text-opacity, 1));
+}
+
+@media (min-width: 990px) {
+  .figma-skin .product__title h1 {
+    font-size: 3.2rem;
+    line-height: 4.2rem;
+  }
+}
+
+.figma-skin .price.price--large,
+  .figma-skin .price.price--large .price-item {
+  font-family: "Balsamiq Sans", sans-serif;
+  font-size: 2.2rem;
+  line-height: 2.9rem;
+  letter-spacing: 0em;
+  --tw-text-opacity: 1;
+  color: rgb(30 30 30 / var(--tw-text-opacity, 1));
+}
+
+@media (min-width: 990px) {
+  .figma-skin .price.price--large,
+  .figma-skin .price.price--large .price-item {
+    font-size: 3.2rem;
+    line-height: 4.2rem;
+  }
+}
+
+/* Figma rating: brand-coloured stars, 16px on mobile and 20px from 990px, no spacing between them. */
+
+.product-info-stack.product__info-container .rating-star {
+  --color-rating-star: #5900FF;
+  --font-size: 1.6;
+  --letter-spacing: 0;
+}
+
+@media screen and (min-width: 990px) {
+  .product-info-stack.product__info-container .rating-star {
+    --font-size: 2;
+  }
+}
+
+/* Figma option labels: body text, full width so "See sizing chart" can sit on the right. */
+
+.product-info-stack .product-form__input .form__label {
+  margin-bottom: 0.8rem;
+  display: flex;
+  width: 100%;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1.6rem;
+  font-size: 1.4rem;
+  line-height: 2.2rem;
+  letter-spacing: 0.01em;
+  --tw-text-opacity: 1;
+  color: rgb(30 30 30 / var(--tw-text-opacity, 1));
+}
+
+@media (min-width: 990px) {
+  .product-info-stack .product-form__input .form__label {
+    font-size: 1.6rem;
+    line-height: 2.6rem;
+    letter-spacing: 0.01em;
+  }
+}
+
+/* Each option (Colour, Size) is its own Figma group: 32px apart on mobile, 40px from 990px. */
+
+.product-info-stack variant-selects .product-form__input {
+  margin-bottom: 0px;
+}
+
+.product-info-stack variant-selects .product-form__input + .product-form__input {
+  margin-top: 3.2rem;
+}
+
+@media (min-width: 990px) {
+  .product-info-stack variant-selects .product-form__input + .product-form__input {
+    margin-top: 4rem;
+  }
+}
+
+/* Figma option boxes: equal width, 3 per row on mobile, 6 per row from 990px. */
+
+.product-info-stack .product-form__input--pill {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.6rem;
+}
+
+@media (min-width: 990px) {
+  .product-info-stack .product-form__input--pill {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+
+.product-info-stack .product-form__input--pill input[type='radio'] + label {
+  margin: 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.4rem;
+  border-width: 1px;
+  border-style: solid;
+  --tw-border-opacity: 1;
+  border-color: rgb(179 179 179 / var(--tw-border-opacity, 1));
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
+  padding-left: 0.8rem;
+  padding-right: 0.8rem;
+  padding-top: 1.2rem;
+  padding-bottom: 1.2rem;
+  font-family: "Balsamiq Sans", sans-serif;
+  font-size: 1.4rem;
+  line-height: 2.2rem;
+  letter-spacing: 0.01em;
+  --tw-text-opacity: 1;
+  color: rgb(117 117 117 / var(--tw-text-opacity, 1));
+}
+
+.product-info-stack .product-form__input--pill input[type='radio'] + label:hover {
+  --tw-border-opacity: 1;
+  border-color: rgb(44 44 44 / var(--tw-border-opacity, 1));
+}
+
+/* Selected: 2px #2C2C2C border (1px border + 1px inset ring so the box doesn't grow). */
+
+.product-info-stack .product-form__input--pill input[type='radio']:checked + label {
+  --tw-border-opacity: 1;
+  border-color: rgb(44 44 44 / var(--tw-border-opacity, 1));
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
+  --tw-text-opacity: 1;
+  color: rgb(30 30 30 / var(--tw-text-opacity, 1));
+  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+  --tw-ring-inset: inset;
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(44 44 44 / var(--tw-ring-opacity, 1));
+}
+
+/* Sold out: grey fill with a diagonal strike, as in the Figma. */
+
+.product-info-stack .product-form__input--pill input[type='radio'].disabled + label,
+  .product-info-stack .product-form__input--pill input[type='radio']:disabled + label {
+  --tw-border-opacity: 1;
+  border-color: rgb(230 230 230 / var(--tw-border-opacity, 1));
+  --tw-bg-opacity: 1;
+  background-color: rgb(245 245 245 / var(--tw-bg-opacity, 1));
+  --tw-text-opacity: 1;
+  color: rgb(179 179 179 / var(--tw-text-opacity, 1));
+  text-decoration-line: none;
+  background-image: linear-gradient(
+      to top right,
+      transparent calc(50% - 0.5px),
+      #E6E6E6 50%,
+      transparent calc(50% + 0.5px)
+    );
+}
+
+.product-info-stack .product-form__input--pill input[type='radio']:focus-visible + label {
+  outline-style: solid;
+  outline-width: 2px;
+  outline-offset: 2px;
+  outline-color: #5900FF;
+}
+
+/* Figma colour swatches: 32px circles, 16px apart, #2C2C2C ring on the selected one. */
+
+.product-info-stack .product-form__input--swatch {
+  gap: 1.6rem;
+}
+
+.product-info-stack .product-form__input--swatch .swatch-input__input + .swatch-input__label {
+  --swatch-input--size: 3.2rem;
+  margin: 0px;
+}
+
+.product-info-stack .product-form__input--swatch .swatch-input__input:checked + .swatch-input__label {
+  outline-width: 1px;
+  outline-color: #2C2C2C;
+}
+
+/* Figma Add to Cart: full-width brand button, 16px Title Case label, 20px arrow. */
+
+.product-info-stack .product-form__buttons {
+  max-width: none;
+}
+
+.figma-skin .product-form__submit {
+  min-height: 0px;
+  padding-left: 1.4rem;
+  padding-right: 1.4rem;
+  padding-top: 1.6rem;
+  padding-bottom: 1.6rem;
+  text-transform: capitalize;
+}
+
+/* Figma accordions: 24px rows, #B3B3B3 dividers, bold body-size titles. */
+
+.product-info-stack .product__accordion.accordion {
+  --tw-border-opacity: 1;
+  border-color: rgb(179 179 179 / var(--tw-border-opacity, 1));
+}
+
+.product-info-stack .product__accordion summary {
+  padding-top: 2.4rem;
+  padding-bottom: 2.4rem;
+}
+
+.product-info-stack .product__accordion .accordion__title {
+  font-family: "Balsamiq Sans", sans-serif;
+  font-size: 1.4rem;
+  line-height: 2.2rem;
+  letter-spacing: 0.01em;
+  font-weight: 700;
+  --tw-text-opacity: 1;
+  color: rgb(30 30 30 / var(--tw-text-opacity, 1));
+}
+
+@media (min-width: 990px) {
+  .product-info-stack .product__accordion .accordion__title {
+    font-size: 1.6rem;
+    line-height: 2.6rem;
+    letter-spacing: 0.01em;
+  }
+}
+
+.product-info-stack .product__accordion .accordion__content {
+  --tw-text-opacity: 1;
+  color: rgb(117 117 117 / var(--tw-text-opacity, 1));
+}
+
+/* Figma gallery corners: 4px on mobile, 8px from 990px. */
+
+.figma-skin .product__media-item .product__media {
+  overflow: hidden;
+  border-radius: 0.4rem;
+}
+
+@media (min-width: 990px) {
+  .figma-skin .product__media-item .product__media {
+    border-radius: 0.8rem;
+  }
+}
+
+/*
+    Cart drawer (Figma "Shopping Carts" slide-over). Scoped to .cart-drawer--figma so the
+    selectors outrank Dawn's two-class .cart-drawer rules without !important.
+  */
+
+.cart-drawer.cart-drawer--figma .drawer__inner {
+  padding-left: 2.4rem;
+  padding-right: 2.4rem;
+  width: 48.6rem;
+  /* Figma drawer width; Dawn's max-width still caps it on small screens. */
+}
+
+.cart-drawer.cart-drawer--figma .drawer__header {
+  padding-bottom: 2.4rem;
+  padding-top: 3.2rem;
+}
+
+.cart-drawer.cart-drawer--figma .drawer__heading {
+  margin: 0px;
+  font-family: "Balsamiq Sans", sans-serif;
+  font-size: 2.4rem;
+  line-height: 3.4rem;
+  font-weight: 400;
+  letter-spacing: 0em;
+  --tw-text-opacity: 1;
+  color: rgb(30 30 30 / var(--tw-text-opacity, 1));
+}
+
+/* Item card: 94px image | name, variant, price | line total; quantity + Remove underneath. */
+
+.cart-drawer.cart-drawer--figma .cart-item {
+  -moz-column-gap: 2rem;
+       column-gap: 2rem;
+  row-gap: 1.6rem;
+  padding-top: 2.4rem;
+  grid-template: auto auto / 9.4rem minmax(0, 1fr) auto;
+}
+
+.cart-drawer.cart-drawer--figma .cart-item--divided {
+  margin-top: 2.4rem;
+  border-width: 0px;
+  border-top-width: 1px;
+  border-style: solid;
+  --tw-border-opacity: 1;
+  border-color: rgb(179 179 179 / var(--tw-border-opacity, 1));
+}
+
+.cart-drawer.cart-drawer--figma .cart-item > td,
+  .cart-drawer.cart-drawer--figma .cart-item > td + td {
+  padding: 0px;
+}
+
+.cart-drawer.cart-drawer--figma .cart-item__image {
+  display: block;
+  border-radius: 0.8rem;
+}
+
+.cart-drawer.cart-drawer--figma .cart-item__name {
+  font-family: "Balsamiq Sans", sans-serif;
+  font-size: 1.6rem;
+  line-height: 2.6rem;
+  font-weight: 400;
+  letter-spacing: 0em;
+  --tw-text-opacity: 1;
+  color: rgb(30 30 30 / var(--tw-text-opacity, 1));
+  text-decoration-line: none;
+}
+
+.cart-drawer.cart-drawer--figma .cart-item .product-option,
+  .cart-drawer.cart-drawer--figma .cart-item .product-option dd {
+  font-family: "Balsamiq Sans", sans-serif;
+  font-size: 1.4rem;
+  line-height: 2.2rem;
+  letter-spacing: 0.01em;
+  --tw-text-opacity: 1;
+  color: rgb(117 117 117 / var(--tw-text-opacity, 1));
+}
+
+/* Figma shows the price once (line total, right); hide Dawn's unit-price line under the name. */
+
+.cart-drawer.cart-drawer--figma .cart-item__details > .product-option,
+  .cart-drawer.cart-drawer--figma .cart-item__details > .cart-item__discounted-prices {
+  display: none;
+}
+
+.cart-drawer.cart-drawer--figma .cart-item .price {
+  font-family: "Balsamiq Sans", sans-serif;
+  font-size: 1.6rem;
+  line-height: 2.6rem;
+  letter-spacing: 0em;
+  --tw-text-opacity: 1;
+  color: rgb(30 30 30 / var(--tw-text-opacity, 1));
+}
+
+.cart-drawer.cart-drawer--figma .cart-item__details {
+  grid-column: 2 / 3;
+}
+
+.cart-drawer.cart-drawer--figma .cart-items .cart-item__quantity {
+  grid-column: 2 / 4;
+}
+
+.cart-drawer.cart-drawer--figma .cart-item__quantity-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cart-drawer.cart-drawer--figma .cart-remove-button {
+  margin: 0px;
+  min-height: 0px;
+  min-width: 0px;
+  padding: 0px;
+  font-family: "Balsamiq Sans", sans-serif;
+  font-size: 1.4rem;
+  line-height: 2.2rem;
+  letter-spacing: 0.01em;
+  --tw-text-opacity: 1;
+  color: rgb(30 30 30 / var(--tw-text-opacity, 1));
+}
+
+.cart-drawer.cart-drawer--figma .cart-items .cart-item--gift-wrap > td {
+  padding-top: 1.2rem;
+}
+
+/* Free shipping progress; --progress is set from Liquid (and JS for other currencies). */
+
+.free-shipping-bar__fill {
+  width: var(--progress, 0%);
+}
+
+/* Footer: recommendations, then the grey summary panel (Subtotal + note | total, Checkout, links, payment icons). */
+
+.cart-drawer.cart-drawer--figma .drawer__footer {
+  border-width: 0px;
+  padding: 0px;
+}
+
+.cart-drawer.cart-drawer--figma .totals {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.8rem;
+}
+
+.cart-drawer.cart-drawer--figma .totals__total,
+  .cart-drawer.cart-drawer--figma .totals__total-value {
+  margin: 0px;
+  font-family: "Balsamiq Sans", sans-serif;
+  font-size: 1.6rem;
+  line-height: 2.6rem;
+  font-weight: 400;
+  letter-spacing: 0em;
+  --tw-text-opacity: 1;
+  color: rgb(30 30 30 / var(--tw-text-opacity, 1));
+}
+
+.cart-drawer.cart-drawer--figma .tax-note {
+  margin: 0px;
+  text-align: left;
+  font-family: "Balsamiq Sans", sans-serif;
+  font-size: 1.4rem;
+  line-height: 2.2rem;
+  letter-spacing: 0.01em;
+  --tw-text-opacity: 1;
+  color: rgb(117 117 117 / var(--tw-text-opacity, 1));
+}
+
+.cart-drawer.cart-drawer--figma .cart__checkout-button {
+  min-height: 0px;
+  padding-left: 1.4rem;
+  padding-right: 1.4rem;
+  padding-top: 1.6rem;
+  padding-bottom: 1.6rem;
+}
+
+/* Empty cart: Figma H6 heading; Dawn's buttons already pick up the brand colour from the skin. */
+
+.cart-drawer.cart-drawer--figma .cart__empty-text {
+  font-family: "Balsamiq Sans", sans-serif;
+  font-size: 2.4rem;
+  line-height: 3.4rem;
+  font-weight: 400;
+  --tw-text-opacity: 1;
+  color: rgb(30 30 30 / var(--tw-text-opacity, 1));
+}
+
+/* Figma gift wrap "Update" is dark ink, not the brand purple. */
+
+.cart-drawer.cart-drawer--figma .gift-wrap-cart-item__update-btn {
+  --color-button: 30, 30, 30;
+}
+
+/* Figma mobile/tablet gallery: one full-width slide at a time, no peek of the next image. */
+
+@media screen and (max-width: 989px) {
+  .product-layout.product .product__media-list .product__media-item {
+    width: 100%;
+    flex-shrink: 0;
+  }
+}
+
+/* Two columns start at 990px instead of Dawn's 750px, so undo Dawn's tablet column styles. */
+
+@media screen and (min-width: 750px) and (max-width: 989px) {
+  .product-layout.product .product__info-wrapper {
+    padding-left: 0px;
+    padding-top: 4rem;
+  }
+
+  .product-layout.product .product__column-sticky {
+    position: static;
+  }
+
+  .product-layout.product .product__info-container {
+    max-width: none;
+  }
+
+  /* Dawn's thumbnail layout shows only the active media from 750px; the tablet slider needs every slide. */
+
+  .product-layout.product--thumbnail .product__media-list .product__media-item:not(.is-active) {
+    display: block;
+  }
+
+  /* Tablet uses the swipe gallery, so bring back Dawn's slider arrows. */
+
+  .product-layout.product .product__media-container .slider-buttons,
+    .product-layout.product .product__media-wrapper .slider-mobile-gutter .slider-button {
+    display: flex;
+  }
+}
+
+.tw-pointer-events-none {
+  pointer-events: none;
+}
+
+.tw-absolute {
+  position: absolute;
+}
+
+.tw-relative {
+  position: relative;
+}
+
+.tw-right-3 {
+  right: 1.2rem;
+}
+
+.tw-top-1\/2 {
+  top: 50%;
+}
+
+.tw-m-0 {
+  margin: 0px;
+}
+
+.-tw-mx-6 {
+  margin-left: -2.4rem;
+  margin-right: -2.4rem;
+}
+
+.tw-mb-2 {
+  margin-bottom: 0.8rem;
+}
+
+.tw-mt-1 {
+  margin-top: 0.4rem;
+}
+
+.tw-block {
+  display: block;
 }
 
 .tw-flex {
-  display: flex
+  display: flex;
 }
 
-.tw-min-h-screen {
-  min-height: 100vh
+.tw-inline-flex {
+  display: inline-flex;
+}
+
+.tw-grid {
+  display: grid;
+}
+
+.tw-hidden {
+  display: none;
+}
+
+.tw-aspect-square {
+  aspect-ratio: 1 / 1;
+}
+
+.tw-h-1\.5 {
+  height: 0.6rem;
+}
+
+.tw-h-2 {
+  height: 0.8rem;
+}
+
+.tw-h-3 {
+  height: 1.2rem;
+}
+
+.tw-h-36 {
+  height: 14.4rem;
+}
+
+.tw-h-4 {
+  height: 1.6rem;
+}
+
+.tw-h-5 {
+  height: 2rem;
+}
+
+.tw-h-6 {
+  height: 2.4rem;
+}
+
+.tw-h-8 {
+  height: 3.2rem;
+}
+
+.tw-h-auto {
+  height: auto;
+}
+
+.tw-h-full {
+  height: 100%;
+}
+
+.tw-w-1\.5 {
+  width: 0.6rem;
 }
 
 .tw-w-2 {
-  width: 0.5rem
+  width: 0.8rem;
 }
 
-.tw-w-fit {
-  width: -moz-fit-content;
-  width: fit-content
+.tw-w-24 {
+  width: 9.6rem;
+}
+
+.tw-w-3 {
+  width: 1.2rem;
+}
+
+.tw-w-4 {
+  width: 1.6rem;
+}
+
+.tw-w-5 {
+  width: 2rem;
+}
+
+.tw-w-6 {
+  width: 2.4rem;
+}
+
+.tw-w-8 {
+  width: 3.2rem;
+}
+
+.tw-w-auto {
+  width: auto;
+}
+
+.tw-w-full {
+  width: 100%;
+}
+
+.tw-min-w-0 {
+  min-width: 0px;
+}
+
+.tw-flex-1 {
+  flex: 1 1 0%;
+}
+
+.tw-shrink-0 {
+  flex-shrink: 0;
+}
+
+.-tw-translate-y-1\/2 {
+  --tw-translate-y: -50%;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
+.-tw-rotate-90 {
+  --tw-rotate: -90deg;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
+.tw-rotate-90 {
+  --tw-rotate: 90deg;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
+.tw-cursor-not-allowed {
+  cursor: not-allowed;
+}
+
+.tw-cursor-pointer {
+  cursor: pointer;
+}
+
+.tw-resize-y {
+  resize: vertical;
+}
+
+.tw-snap-x {
+  scroll-snap-type: x var(--tw-scroll-snap-strictness);
+}
+
+.tw-snap-mandatory {
+  --tw-scroll-snap-strictness: mandatory;
+}
+
+.tw-snap-start {
+  scroll-snap-align: start;
+}
+
+.tw-list-none {
+  list-style-type: none;
+}
+
+.tw-appearance-none {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+}
+
+.tw-flex-col {
+  flex-direction: column;
+}
+
+.tw-flex-wrap {
+  flex-wrap: wrap;
 }
 
 .tw-items-center {
-  align-items: center
+  align-items: center;
+}
+
+.tw-items-baseline {
+  align-items: baseline;
 }
 
 .tw-justify-center {
-  justify-content: center
+  justify-content: center;
+}
+
+.tw-justify-between {
+  justify-content: space-between;
+}
+
+.tw-gap-1 {
+  gap: 0.4rem;
+}
+
+.tw-gap-2 {
+  gap: 0.8rem;
+}
+
+.tw-gap-2\.5 {
+  gap: 1rem;
+}
+
+.tw-gap-3 {
+  gap: 1.2rem;
+}
+
+.tw-gap-4 {
+  gap: 1.6rem;
+}
+
+.tw-gap-5 {
+  gap: 2rem;
+}
+
+.tw-gap-6 {
+  gap: 2.4rem;
+}
+
+.tw-gap-x-1 {
+  -moz-column-gap: 0.4rem;
+       column-gap: 0.4rem;
+}
+
+.tw-gap-x-4 {
+  -moz-column-gap: 1.6rem;
+       column-gap: 1.6rem;
+}
+
+.tw-gap-y-2 {
+  row-gap: 0.8rem;
+}
+
+.tw-overflow-hidden {
+  overflow: hidden;
+}
+
+.tw-overflow-x-auto {
+  overflow-x: auto;
+}
+
+.tw-scroll-smooth {
+  scroll-behavior: smooth;
+}
+
+.tw-rounded {
+  border-radius: 0.4rem;
+}
+
+.tw-rounded-full {
+  border-radius: 9999px;
 }
 
 .tw-rounded-lg {
-  border-radius: 0.5rem
+  border-radius: 0.8rem;
 }
 
-.tw-bg-red-500 {
+.tw-border {
+  border-width: 1px;
+}
+
+.tw-border-0 {
+  border-width: 0px;
+}
+
+.tw-border-b {
+  border-bottom-width: 1px;
+}
+
+.tw-border-solid {
+  border-style: solid;
+}
+
+.tw-border-figma-line {
+  --tw-border-opacity: 1;
+  border-color: rgb(179 179 179 / var(--tw-border-opacity, 1));
+}
+
+.tw-border-figma-line-soft {
+  --tw-border-opacity: 1;
+  border-color: rgb(230 230 230 / var(--tw-border-opacity, 1));
+}
+
+.tw-bg-figma-dot {
   --tw-bg-opacity: 1;
-  background-color: rgb(239 68 68 / var(--tw-bg-opacity, 1))
+  background-color: rgb(217 217 217 / var(--tw-bg-opacity, 1));
 }
 
-.tw-p-8 {
-  padding: 2rem
+.tw-bg-figma-ink {
+  --tw-bg-opacity: 1;
+  background-color: rgb(30 30 30 / var(--tw-bg-opacity, 1));
 }
 
-.tw-p-4 {
-  padding: 1rem
+.tw-bg-figma-panel {
+  --tw-bg-opacity: 1;
+  background-color: rgb(245 245 245 / var(--tw-bg-opacity, 1));
 }
 
-.tw-pt-4 {
-  padding-top: 1rem
+.tw-bg-figma-warn {
+  --tw-bg-opacity: 1;
+  background-color: rgb(229 160 0 / var(--tw-bg-opacity, 1));
 }
 
-.tw-pb-4 {
-  padding-bottom: 1rem
+.tw-bg-figma-warn-soft {
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 241 194 / var(--tw-bg-opacity, 1));
 }
 
-.tw-pl-8 {
-  padding-left: 2rem
+.tw-bg-transparent {
+  background-color: transparent;
+}
+
+.tw-bg-white {
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
+}
+
+.tw-object-cover {
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+
+.tw-p-0 {
+  padding: 0px;
+}
+
+.tw-px-2 {
+  padding-left: 0.8rem;
+  padding-right: 0.8rem;
+}
+
+.tw-px-3\.5 {
+  padding-left: 1.4rem;
+  padding-right: 1.4rem;
+}
+
+.tw-px-4 {
+  padding-left: 1.6rem;
+  padding-right: 1.6rem;
+}
+
+.tw-px-6 {
+  padding-left: 2.4rem;
+  padding-right: 2.4rem;
+}
+
+.tw-py-2 {
+  padding-top: 0.8rem;
+  padding-bottom: 0.8rem;
+}
+
+.tw-py-3 {
+  padding-top: 1.2rem;
+  padding-bottom: 1.2rem;
+}
+
+.tw-py-4 {
+  padding-top: 1.6rem;
+  padding-bottom: 1.6rem;
+}
+
+.tw-py-6 {
+  padding-top: 2.4rem;
+  padding-bottom: 2.4rem;
+}
+
+.tw-py-8 {
+  padding-top: 3.2rem;
+  padding-bottom: 3.2rem;
+}
+
+.tw-pb-2 {
+  padding-bottom: 0.8rem;
+}
+
+.tw-pl-2\.5 {
+  padding-left: 1rem;
 }
 
 .tw-pr-8 {
-  padding-right: 2rem
+  padding-right: 3.2rem;
+}
+
+.tw-pt-4 {
+  padding-top: 1.6rem;
+}
+
+.tw-text-center {
+  text-align: center;
+}
+
+.tw-font-body {
+  font-family: var(--font-body-family);
+}
+
+.tw-font-figma {
+  font-family: "Balsamiq Sans", sans-serif;
+}
+
+.tw-text-base {
+  font-size: 1.6rem;
+  line-height: 2.4rem;
+}
+
+.tw-text-figma-body {
+  font-size: 1.6rem;
+  line-height: 2.6rem;
+  letter-spacing: 0.01em;
+}
+
+.tw-text-figma-button {
+  font-size: 1.6rem;
+  line-height: 2rem;
+  letter-spacing: 0.02em;
+}
+
+.tw-text-figma-button-small {
+  font-size: 1.4rem;
+  line-height: 2rem;
+  letter-spacing: 0.02em;
+}
+
+.tw-text-figma-small {
+  font-size: 1.4rem;
+  line-height: 2.2rem;
+  letter-spacing: 0.01em;
+}
+
+.tw-text-figma-small-mobile {
+  font-size: 1.2rem;
+  line-height: 1.9rem;
+  letter-spacing: 0.01em;
+}
+
+.tw-text-sm {
+  font-size: 1.4rem;
+  line-height: 2rem;
+}
+
+.tw-font-bold {
+  font-weight: 700;
+}
+
+.tw-font-normal {
+  font-weight: 400;
+}
+
+.tw-text-figma-ink {
+  --tw-text-opacity: 1;
+  color: rgb(30 30 30 / var(--tw-text-opacity, 1));
+}
+
+.tw-text-figma-muted {
+  --tw-text-opacity: 1;
+  color: rgb(117 117 117 / var(--tw-text-opacity, 1));
+}
+
+.tw-text-figma-warn {
+  --tw-text-opacity: 1;
+  color: rgb(229 160 0 / var(--tw-text-opacity, 1));
+}
+
+.tw-text-red-600 {
+  --tw-text-opacity: 1;
+  color: rgb(220 38 38 / var(--tw-text-opacity, 1));
+}
+
+.tw-text-white {
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity, 1));
+}
+
+.tw-underline {
+  text-decoration-line: underline;
+}
+
+.tw-no-underline {
+  text-decoration-line: none;
+}
+
+.tw-underline-offset-4 {
+  text-underline-offset: 4px;
+}
+
+.tw-opacity-50 {
+  opacity: 0.5;
+}
+
+/*
+  Figma redesign (product page + cart drawer).
+  Compound selectors outrank Dawn's rules in section-main-product.css / component-cart-drawer.css
+  (which load later) without needing !important.
+*/
+
+.placeholder\:tw-text-figma-line::-moz-placeholder {
+  --tw-text-opacity: 1;
+  color: rgb(179 179 179 / var(--tw-text-opacity, 1));
+}
+
+.placeholder\:tw-text-figma-line::placeholder {
+  --tw-text-opacity: 1;
+  color: rgb(179 179 179 / var(--tw-text-opacity, 1));
+}
+
+.after\:tw-absolute::after {
+  content: var(--tw-content);
+  position: absolute;
+}
+
+.after\:-tw-inset-2::after {
+  content: var(--tw-content);
+  inset: -0.8rem;
+}
+
+.after\:-tw-inset-3::after {
+  content: var(--tw-content);
+  inset: -1.2rem;
+}
+
+.hover\:tw-text-figma-ink:hover {
+  --tw-text-opacity: 1;
+  color: rgb(30 30 30 / var(--tw-text-opacity, 1));
+}
+
+.hover\:tw-underline:hover {
+  text-decoration-line: underline;
+}
+
+.disabled\:tw-cursor-default:disabled {
+  cursor: default;
+}
+
+.disabled\:tw-opacity-40:disabled {
+  opacity: 0.4;
+}
+
+.tw-group:disabled .group-disabled\:tw-hidden {
+  display: none;
+}
+
+.tw-peer:checked ~ .peer-checked\:tw-flex {
+  display: flex;
+}
+
+.tw-peer:checked ~ .peer-checked\:tw-hidden {
+  display: none;
+}
+
+.tw-peer:focus-visible ~ .peer-focus-visible\:tw-outline {
+  outline-style: solid;
+}
+
+.tw-peer:focus-visible ~ .peer-focus-visible\:tw-outline-2 {
+  outline-width: 2px;
+}
+
+.tw-peer:focus-visible ~ .peer-focus-visible\:tw-outline-offset-2 {
+  outline-offset: 2px;
+}
+
+.tw-peer:focus-visible ~ .peer-focus-visible\:tw-outline-foreground\/50 {
+  outline-color: rgba(var(--color-foreground), 0.5);
+}
+
+@media (min-width: 990px) {
+  .desktop\:tw-grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .desktop\:tw-gap-2 {
+    gap: 0.8rem;
+  }
+
+  .desktop\:tw-p-4 {
+    padding: 1.6rem;
+  }
+
+  .desktop\:tw-text-figma-body {
+    font-size: 1.6rem;
+    line-height: 2.6rem;
+    letter-spacing: 0.01em;
+  }
 }

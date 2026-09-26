@@ -1,0 +1,30 @@
+{% comment %}
+  Payment Icons
+
+  Renders "We accept" with an icon for each payment method enabled on the store,
+  so the row always matches what checkout actually offers. Stores that report no
+  methods (e.g. development stores) fall back to the Figma set so the row still shows.
+
+  Usage:
+  {% render 'payment-icons' %}
+{% endcomment %}
+
+{%- liquid
+  assign payment_types = shop.enabled_payment_types
+  if payment_types.size == 0
+    assign payment_types = 'american_express,apple_pay,google_pay,master,shopify_pay,paypal,visa' | split: ','
+  endif
+-%}
+
+{%- if payment_types.size > 0 -%}
+  <div class="tw-flex tw-flex-wrap tw-items-center tw-justify-center tw-gap-4">
+    <span class="tw-font-figma tw-text-figma-small tw-text-figma-muted">{{ 'cart_drawer.we_accept' | t }}</span>
+    <ul class="tw-m-0 tw-flex tw-list-none tw-flex-wrap tw-items-center tw-justify-center tw-gap-x-1 tw-gap-y-2 tw-p-0" role="list">
+      {%- for type in payment_types -%}
+        <li class="tw-flex">
+          {{- type | payment_type_svg_tag: class: 'tw-block tw-h-6 tw-w-auto' -}}
+        </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+{%- endif -%}
