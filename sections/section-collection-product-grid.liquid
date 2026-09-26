@@ -106,7 +106,7 @@
         -%}
         <div class="cpg__card">
           <div class="cpg__card-media">
-            <a href="{{ product.url | within: collection }}" class="cpg__card-img-link" tabindex="-1" aria-hidden="true">
+            <a href="{{ product.url | within: collection }}" class="cpg__card-img-link{% if product.media[1].preview_image %} cpg__card-img-link--has-secondary{% endif %}" tabindex="-1" aria-hidden="true">
               {%- if product.featured_image -%}
                 {{
                   product.featured_image
@@ -116,6 +116,19 @@
                     loading: 'lazy',
                     widths: '400, 600, 800'
                 }}
+                {%- comment -%} Second image fades in on hover (desktop only, see CSS) {%- endcomment -%}
+                {%- assign secondary_image = product.media[1].preview_image -%}
+                {%- if secondary_image -%}
+                  {{
+                    secondary_image
+                    | image_url: width: 800
+                    | image_tag:
+                      class: 'cpg__card-img cpg__card-img--secondary',
+                      loading: 'lazy',
+                      widths: '400, 600, 800',
+                      alt: ''
+                  }}
+                {%- endif -%}
               {%- else -%}
                 {{ 'product-1' | placeholder_svg_tag: 'cpg__card-img cpg__card-img--placeholder' }}
               {%- endif -%}
@@ -327,11 +340,6 @@
                 elsif active_filter_count == 0 and forloop.first
                   assign is_open = true
                 endif
-
-                assign input_type = 'checkbox'
-                if filter.param_name == 'filter.p.product_type'
-                  assign input_type = 'radio'
-                endif
               -%}
               <div class="cpg__accordion">
                 <button
@@ -363,8 +371,8 @@
                         <li>
                           <label class="cpg__filter-option{% if filter_value.count == 0 and filter_value.active == false %} is-disabled{% endif %}">
                             <input
-                              class="cpg__filter-input cpg__filter-input--{{ input_type }}"
-                              type="{{ input_type }}"
+                              class="cpg__filter-input"
+                              type="radio"
                               name="{{ filter.param_name }}"
                               value="{{ filter_value.value | escape }}"
                               {%- if filter_value.active %} checked{% endif %}

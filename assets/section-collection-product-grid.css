@@ -218,6 +218,7 @@
 }
 
 .cpg__card-img-link {
+  position: relative;
   display: block;
   width: 100%;
   height: 100%;
@@ -228,7 +229,28 @@
   height: 100%;
   object-fit: cover;
   display: block;
-  transition: opacity 0.2s ease;
+  transition: opacity 0.4s ease, transform 0.6s ease;
+}
+
+.cpg__card-img--secondary {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+}
+
+/* ── Image hover ──
+   Products with a second image cross-fade to it; others zoom in slightly.
+   Only on devices that can hover, so taps on mobile go straight to the product. */
+@media (hover: hover) {
+  .cpg__card-media:hover .cpg__card-img--secondary {
+    opacity: 1;
+  }
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .cpg__card-media:hover .cpg__card-img-link:not(.cpg__card-img-link--has-secondary) .cpg__card-img {
+    transform: scale(1.04);
+  }
 }
 
 .cpg__card-img--placeholder {
@@ -724,26 +746,21 @@
   cursor: inherit;
 }
 
-/* Radio — Figma Icon/Radio: 14px ring, 8.33px dot */
-.cpg__filter-input--radio::before,
-.cpg__filter-input--checkbox::before {
+/* Radio — Figma Icon/Radio: 14px ring, 8.33px dot. One value per filter group. */
+.cpg__filter-input::before {
   content: '';
   position: absolute;
   inset: 0.3rem;
   border: 0.1rem solid #d6d6d2;
+  border-radius: 50%;
   box-sizing: border-box;
 }
 
-.cpg__filter-input--radio::before {
-  border-radius: 50%;
-}
-
-.cpg__filter-input--radio:checked::before,
-.cpg__filter-input--checkbox:checked::before {
+.cpg__filter-input:checked::before {
   border-color: #212120;
 }
 
-.cpg__filter-input--radio:checked::after {
+.cpg__filter-input:checked::after {
   content: '';
   position: absolute;
   top: 50%;
@@ -753,22 +770,6 @@
   border-radius: 50%;
   background-color: #212120;
   transform: translate(-50%, -50%);
-}
-
-.cpg__filter-input--checkbox:checked::before {
-  background-color: #212120;
-}
-
-.cpg__filter-input--checkbox:checked::after {
-  content: '';
-  position: absolute;
-  top: 0.55rem;
-  left: 0.75rem;
-  width: 0.4rem;
-  height: 0.75rem;
-  border: solid #fbfaf8;
-  border-width: 0 0.15rem 0.15rem 0;
-  transform: rotate(45deg);
 }
 
 .cpg__filter-input:focus-visible {
