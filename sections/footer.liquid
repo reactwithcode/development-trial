@@ -10,6 +10,25 @@
     margin-top: {{ section.settings.margin_top | times: 0.75 | round: 0 }}px;
   }
 
+  /* Redesign font, scoped to the footer. Re-pointing the theme font variables means headings,
+     inputs and buttons inside pick it up too. General Sans is loaded at 500/600 only. */
+  .footer {
+    --font-body-family: var(--font-general-sans);
+    --font-body-weight: 500;
+    --font-body-weight-bold: 600;
+    --font-heading-family: var(--font-general-sans);
+    --font-heading-weight: 500;
+    font-family: var(--font-general-sans);
+    font-weight: 500;
+  }
+
+  /* Form controls don't inherit fonts by default (newsletter email + submit) */
+  .footer input,
+  .footer button,
+  .footer select {
+    font-family: inherit;
+  }
+
   .section-{{ section.id }}-padding {
     padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
     padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;

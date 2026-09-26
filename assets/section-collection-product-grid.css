@@ -1,3 +1,8 @@
+/* ── Section root ── */
+.cpg {
+  font-family: var(--font-general-sans);
+}
+
 /* ── Toolbar ── */
 .cpg__toolbar {
   border-top: 0.1rem solid #e4e4e0;
@@ -27,7 +32,7 @@
   background: none;
   border: none;
   padding: 0;
-  font-family: var(--font-body-family);
+  font-family: var(--font-general-sans);
   font-weight: 500;
   font-size: 1.4rem;
   line-height: 2rem;
@@ -59,7 +64,8 @@
 }
 
 .cpg__count {
-  font-family: var(--font-body-family);
+  font-family: var(--font-general-sans);
+  font-weight: 500;
   font-size: 1.2rem;
   line-height: 1.68rem;
   color: #6f6f6a;
@@ -84,7 +90,7 @@
 }
 
 .cpg__sort-label {
-  font-family: var(--font-body-family);
+  font-family: var(--font-general-sans);
   font-size: 1.4rem;
   font-weight: 500;
   line-height: 1.82rem;
@@ -145,7 +151,7 @@
   gap: 0.4rem;
   padding: 0.4rem 0.8rem;
   border: 0.1rem solid rgb(var(--color-foreground));
-  font-family: var(--font-body-family);
+  font-family: var(--font-general-sans);
   font-size: 1.2rem;
   line-height: 1.6rem;
   text-decoration: none;
@@ -163,7 +169,7 @@
 }
 
 .cpg__active-clear {
-  font-family: var(--font-body-family);
+  font-family: var(--font-general-sans);
   font-size: 1.2rem;
   line-height: 1.6rem;
   color: #6f6f6a;
@@ -197,7 +203,7 @@
 
 .cpg__empty {
   grid-column: 1 / -1;
-  font-family: var(--font-body-family);
+  font-family: var(--font-general-sans);
   font-size: 1.4rem;
   color: #6f6f6a;
   padding: 3.2rem 0;
@@ -266,7 +272,7 @@
   left: 0.8rem;
   background-color: #d50602;
   color: #ffffff;
-  font-family: var(--font-body-family);
+  font-family: var(--font-general-sans);
   font-size: 1.2rem;
   font-weight: 500;
   line-height: 1;
@@ -317,7 +323,7 @@
 }
 
 .cpg__badge-text {
-  font-family: var(--font-body-family);
+  font-family: var(--font-general-sans);
   font-size: 1.2rem;
   font-weight: 500;
   letter-spacing: 0.05rem;
@@ -334,9 +340,9 @@
 }
 
 .cpg__card-name {
-  font-family: var(--font-body-family);
+  font-family: var(--font-general-sans);
   font-size: 1.2rem;
-  font-weight: 400;
+  font-weight: 500;
   line-height: 1.6rem;
   color: rgb(var(--color-foreground));
   text-decoration: none;
@@ -362,9 +368,9 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 0.4rem;
-  font-family: var(--font-body-family);
+  font-family: var(--font-general-sans);
   font-size: 1.2rem;
-  font-weight: 400;
+  font-weight: 500;
   line-height: 1.6rem;
 }
 
@@ -455,7 +461,7 @@
   justify-content: center;
   width: 3.2rem;
   height: 3.2rem;
-  font-family: var(--font-body-family);
+  font-family: var(--font-general-sans);
   font-size: 1.4rem;
   font-weight: 500;
   line-height: 1.82rem;
@@ -551,7 +557,7 @@
 
 .cpg__drawer-title {
   flex: 1 1 auto;
-  font-family: var(--font-body-family);
+  font-family: var(--font-general-sans);
   font-size: 2rem;
   font-weight: 500;
   line-height: 2.4rem;
@@ -621,7 +627,7 @@
 }
 
 .cpg__selected-label {
-  font-family: var(--font-body-family);
+  font-family: var(--font-general-sans);
   font-size: 1.2rem;
   font-weight: 500;
   line-height: 1.68rem;
@@ -642,7 +648,7 @@
   gap: 0.4rem;
   padding: 0.4rem 0.8rem;
   border: 0.1rem solid #e4e4e0;
-  font-family: var(--font-body-family);
+  font-family: var(--font-general-sans);
   font-size: 1.2rem;
   font-weight: 500;
   line-height: 1.68rem;
@@ -686,7 +692,7 @@
 }
 
 .cpg__accordion-label {
-  font-family: var(--font-body-family);
+  font-family: var(--font-general-sans);
   font-size: 1.4rem;
   font-weight: 500;
   line-height: 1.82rem;
@@ -780,7 +786,7 @@
 
 .cpg__filter-text {
   flex: 1 1 auto;
-  font-family: var(--font-body-family);
+  font-family: var(--font-general-sans);
   font-size: 1.4rem;
   font-weight: 500;
   line-height: 1.82rem;
@@ -802,7 +808,7 @@
 }
 
 .cpg__price-field span {
-  font-family: var(--font-body-family);
+  font-family: var(--font-general-sans);
   font-size: 1.2rem;
   font-weight: 500;
   line-height: 1.68rem;
@@ -811,11 +817,12 @@
 
 .cpg__price-input {
   width: 100%;
+  font-weight: 500;
   padding: 0.8rem 1.2rem;
   border: 0.1rem solid #d6d6d2;
   border-radius: 0;
   background: none;
-  font-family: var(--font-body-family);
+  font-family: var(--font-general-sans);
   font-size: 1.4rem;
   line-height: 1.82rem;
   color: #212120;
@@ -843,7 +850,7 @@
   gap: 1.2rem;
   height: 4.8rem;
   padding: 1.2rem 2.4rem;
-  font-family: var(--font-body-family);
+  font-family: var(--font-general-sans);
   font-size: 1.4rem;
   font-weight: 600;
   line-height: 1.6rem;

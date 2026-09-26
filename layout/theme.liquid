@@ -95,6 +95,24 @@
         src: url('{{ 'balsamiq-sans-700.woff2' | asset_url }}') format('woff2');
       }
 
+      /* Collection-page redesign font (Fontshare, ITF Free Font License): custom header,
+         collection hero, quick filters and product grid. Figma uses Medium and Semibold only. */
+      @font-face {
+        font-family: 'General Sans';
+        font-style: normal;
+        font-weight: 500;
+        font-display: swap;
+        src: url('{{ 'general-sans-500.woff2' | asset_url }}') format('woff2');
+      }
+
+      @font-face {
+        font-family: 'General Sans';
+        font-style: normal;
+        font-weight: 600;
+        font-display: swap;
+        src: url('{{ 'general-sans-600.woff2' | asset_url }}') format('woff2');
+      }
+
       {% for scheme in settings.color_schemes -%}
         {% assign scheme_classes = scheme_classes | append: ', .color-' | append: scheme.id %}
         {% if forloop.index == 1 -%}
@@ -142,6 +160,7 @@
 
       :root {
         --font-body-family: {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }};
+--font-general-sans: 'General Sans', {{ settings.type_body_font.fallback_families }};
         --font-body-style: {{ settings.type_body_font.style }};
         --font-body-weight: {{ settings.type_body_font.weight }};
         --font-body-weight-bold: {{ settings.type_body_font.weight | plus: 300 | at_most: 1000 }};
@@ -317,6 +336,9 @@
       <link rel="preload" as="font" href="{{ settings.type_header_font | font_url }}" type="font/woff2" crossorigin>
       {% comment %}theme-check-enable AssetPreload{% endcomment %}
     {%- endunless -%}
+    {% comment %}theme-check-disable AssetPreload{% endcomment %}
+    <link rel="preload" as="font" href="{{ 'general-sans-500.woff2' | asset_url }}" type="font/woff2" crossorigin>
+    {% comment %}theme-check-enable AssetPreload{% endcomment %}
 
     {%- if localization.available_countries.size > 1 or localization.available_languages.size > 1 -%}
       {{ 'component-localization-form.css' | asset_url | stylesheet_tag: preload: true }}

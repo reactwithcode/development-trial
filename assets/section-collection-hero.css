@@ -1,5 +1,6 @@
 /* ── Custom element base ── */
 .collection-hero {
+  font-family: var(--font-general-sans);
   padding: 1.6rem 0 0;
 }
 
@@ -23,7 +24,7 @@
 }
 
 .collection-hero__title {
-  font-family: var(--font-body-family);
+  font-family: var(--font-general-sans);
   font-weight: 500;
   font-size: 2.4rem;
   line-height: 2.8rem;
