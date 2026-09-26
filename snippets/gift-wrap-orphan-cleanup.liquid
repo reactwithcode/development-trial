@@ -1,0 +1,29 @@
+{% comment %}
+  Gift Wrap Orphan Cleanup
+
+  Lists Gift Wrap lines whose parent product is no longer in the cart (for example
+  after the customer removed it) so gift-wrap.js can remove them. Renders nothing
+  when every Gift Wrap line still has its parent. Place it inside markup that Dawn
+  re-renders after cart changes, so it reappears whenever an orphan appears.
+
+  Usage:
+  {% render 'gift-wrap-orphan-cleanup' %}
+{% endcomment %}
+
+{%- liquid
+  assign item_keys = cart.items | map: 'key'
+  assign orphan_keys = ''
+
+  for cart_item in cart.items
+    assign parent_key = cart_item.properties._parent_key
+    if parent_key != blank
+      unless item_keys contains parent_key
+        assign orphan_keys = orphan_keys | append: cart_item.key | append: ','
+      endunless
+    endif
+  endfor
+-%}
+
+{%- if orphan_keys != blank -%}
+  <gift-wrap-orphan-cleanup data-keys="{{ orphan_keys | remove_last: ',' | escape }}" hidden></gift-wrap-orphan-cleanup>
+{%- endif -%}

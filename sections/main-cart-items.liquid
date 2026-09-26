@@ -82,6 +82,8 @@
 
               <tbody>
                 {%- for item in cart.items -%}
+                {%- comment -%} Gift Wrap lines carry _parent_key and render inside their parent's gift wrap row instead. {%- endcomment -%}
+                {%- unless item.properties._parent_key != blank -%}
                   <tr
                     class="cart-item {% if item.parent_relationship.parent != null %}cart-item__nested-line{% endif %}"
                     id="CartItem-{{ item.index | plus: 1 }}"
@@ -447,9 +449,21 @@
                       </div>
                     </td>
                   </tr>
+                  {%- assign gift_wrap_item = nil -%}
+                  {%- for cart_item in cart.items -%}
+                    {%- if cart_item.properties._parent_key == item.key -%}
+                      {%- assign gift_wrap_item = cart_item -%}
+                      {%- break -%}
+                    {%- endif -%}
+                  {%- endfor -%}
+                  {%- if gift_wrap_item != nil -%}
+                    {%- render 'gift-wrap-cart-item', item: item, gift_wrap_item: gift_wrap_item, context: 'page', colspan: 5 -%}
+                  {%- endif -%}
+                {%- endunless -%}
                 {%- endfor -%}
               </tbody>
             </table>
+            {%- render 'gift-wrap-orphan-cleanup' -%}
           {%- endif -%}
         </div>
       </div>

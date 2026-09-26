@@ -370,4 +370,44 @@
       }
     );
   }
+
+  // Rendered by gift-wrap-orphan-cleanup.liquid only when a Gift Wrap line has lost its parent product,
+  // so the customer is never charged for wrapping nothing. Works on the cart page and in the drawer.
+  // Each key is tried once per page load: if Shopify refuses the removal, the re-rendered element must not retry forever.
+  const attemptedOrphanKeys = new Set();
+
+  if (!customElements.get('gift-wrap-orphan-cleanup')) {
+    customElements.define(
+      'gift-wrap-orphan-cleanup',
+      class GiftWrapOrphanCleanup extends HTMLElement {
+        connectedCallback() {
+          const keys = (this.dataset.keys?.split(',') ?? []).filter((key) => key && !attemptedOrphanKeys.has(key));
+          keys.forEach((key) => attemptedOrphanKeys.add(key));
+          if (keys.length) this.removeOrphans(keys);
+        }
+
+        async removeOrphans(keys) {
+          for (const key of keys) {
+            try {
+              // Another cleanup (e.g. the PDP's) may already have removed this line; a failed request is fine.
+              await fetch('/cart/change.js', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: key, quantity: 0 }),
+              });
+            } catch (e) {
+              console.warn('[Gift Wrap] Could not remove orphaned gift wrap:', e.message);
+            }
+          }
+
+          try {
+            const cartData = await fetch('/cart.js').then((r) => r.json());
+            publish(PUB_SUB_EVENTS.cartUpdate, { source: 'gift-wrap-cleanup', cartData });
+          } catch (e) {
+            console.error('[Gift Wrap]', e.message);
+          }
+        }
+      }
+    );
+  }
 }
