@@ -260,6 +260,34 @@
           [this.toInput, this.fromInput, this.messageInput].forEach((el) => {
             el?.addEventListener('input', this.handleInput);
           });
+
+          if (this.hasAttribute('data-legacy-properties')) this.migrateLegacyProperties();
+        }
+
+        // Carts from before the checkout fix hold _gift_* keys, which Shopify hides at checkout.
+        // Re-save them once under the visible names; the refreshed drawer no longer carries the flag.
+        async migrateLegacyProperties() {
+          try {
+            const res = await fetch('/cart/change.js', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                id: this.dataset.giftWrapKey,
+                properties: buildGiftProperties(this.dataset, {
+                  to: this.dataset.giftTo,
+                  from: this.dataset.giftFrom,
+                  message: this.dataset.giftMessage,
+                  parentKey: this.dataset.parentKey,
+                }),
+              }),
+            });
+            if (!res.ok) throw new Error('Failed to migrate gift wrap properties');
+
+            const cartData = await fetch('/cart.js').then((r) => r.json());
+            publish(PUB_SUB_EVENTS.cartUpdate, { source: 'gift-wrap-migrate', cartData });
+          } catch (e) {
+            console.error('[Gift Wrap]', e.message);
+          }
         }
 
         disconnectedCallback() {
