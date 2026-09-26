@@ -80,7 +80,6 @@ quick-filters {
 .quick-filters__dot {
   width: 0.6rem;
   height: 0.6rem;
-  border-radius: 50%;
   background-color: #009951;
   flex-shrink: 0;
   display: block;
@@ -90,13 +89,15 @@ quick-filters {
   display: none;
 }
 
+/* Figma mobile: 57px fade that runs into the right gutter, solid for its right 60% */
 .quick-filters__fade {
+  display: block;
   position: absolute;
   top: 0;
-  right: 3.2rem;
-  width: 6rem;
+  right: -1.6rem;
+  width: 5.7rem;
   height: 100%;
-  background: linear-gradient(to right, transparent, rgb(var(--color-background)));
+  background: linear-gradient(to left, rgb(var(--color-background)) 60%, rgba(var(--color-background), 0) 100%);
   pointer-events: none;
 }
 
@@ -110,10 +111,11 @@ quick-filters {
   }
 }
 
+/* 16px arrow sits flush with the content edge; the 32px tap area extends into the gutter */
 .quick-filters__scroll-btn {
   position: absolute;
   top: 50%;
-  right: 0;
+  right: -0.8rem;
   transform: translateY(-50%);
   display: flex;
   align-items: center;

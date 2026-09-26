@@ -1,11 +1,11 @@
 /* ── Custom element base ── */
 .collection-hero {
-  padding: 1.6rem 0 2.4rem;
+  padding: 1.6rem 0 0;
 }
 
 @media screen and (min-width: 750px) {
   .collection-hero {
-    padding: 1.6rem 0 3.2rem;
+    padding: 1.6rem 0 0;
   }
 }
 
