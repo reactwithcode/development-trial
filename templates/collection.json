@@ -56,8 +56,8 @@
         "shorts": {
           "type": "filter_item",
           "settings": {
-            "label": "Shorts",
-            "filter_value": "Shorts"
+            "label": "Tuxedo",
+            "filter_value": "Tuxedo"
           }
         },
         "quarter-zips": {
