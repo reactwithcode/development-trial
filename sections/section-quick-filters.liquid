@@ -13,6 +13,8 @@
       endif
     endfor
   endif
+  # Array (not string) so `contains` matches whole values — "Shirts" must not match "T-Shirts"
+  assign active_values = active_values_str | split: '||'
 -%}
 
 {%- style -%}
@@ -42,11 +44,10 @@
             if block.type == 'filter_item'
               assign block_val = block.settings.filter_value
             endif
-            assign check_token = block_val | append: '||'
             assign is_active = false
             if block.type == 'all' and active_values_str == ''
               assign is_active = true
-            elsif block.type == 'filter_item' and active_values_str contains check_token
+            elsif block.type == 'filter_item' and active_values contains block_val
               assign is_active = true
             endif
           -%}
