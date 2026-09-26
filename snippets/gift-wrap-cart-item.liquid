@@ -26,6 +26,14 @@
   assign gift_to = gift_wrap_item.properties[property_to] | default: gift_wrap_item.properties._gift_to
   assign gift_from = gift_wrap_item.properties[property_from] | default: gift_wrap_item.properties._gift_from
   assign gift_message = gift_wrap_item.properties[property_message] | default: gift_wrap_item.properties._gift_message
+
+  comment
+    Lines saved under the old hidden _gift_* names don't show at checkout; gift-wrap.js re-saves them once.
+  endcomment
+  assign has_legacy_properties = false
+  if gift_wrap_item.properties[property_message] == blank and gift_wrap_item.properties._gift_message != blank
+    assign has_legacy_properties = true
+  endif
   assign link_button_classes = 'tw-relative tw-m-0 tw-cursor-pointer tw-border-0 tw-bg-transparent tw-p-0 tw-font-figma tw-text-figma-small tw-text-figma-ink after:tw-absolute after:-tw-inset-3'
 
   assign to_label = 'gift_wrap.to_label' | t
@@ -46,6 +54,9 @@
       data-gift-to="{{ gift_to | escape }}"
       data-gift-from="{{ gift_from | escape }}"
       data-gift-message="{{ gift_message | escape }}"
+      {% if has_legacy_properties %}
+        data-legacy-properties
+      {% endif %}
     >
       <div class="tw-flex tw-items-center tw-justify-between tw-gap-4">
         <p class="tw-m-0 tw-flex tw-items-center tw-gap-2">
