@@ -365,12 +365,13 @@
   text-decoration: line-through;
 }
 
-/* ── Pagination ── */
+/* ── Pagination ──
+   Figma: 32px outlined chevron buttons, 32px number cells, 24px gaps. */
 .cpg__pagination {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 1.2rem;
+  gap: 2.4rem;
   padding: 2.4rem 1.6rem;
   max-width: var(--page-width);
   margin: 0 auto;
@@ -378,7 +379,6 @@
 
 @media screen and (min-width: 750px) {
   .cpg__pagination {
-    gap: 2.4rem;
     padding: 2.4rem;
   }
 }
@@ -387,40 +387,33 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
+  box-sizing: border-box;
   width: 3.2rem;
   height: 3.2rem;
   border: 0.1rem solid #d6d6d2;
+  color: #212120;
   text-decoration: none;
-  color: rgb(var(--color-foreground));
-  transition: opacity 0.15s ease;
-  flex-shrink: 0;
+  transition: border-color 0.15s ease;
+}
+
+.cpg__page-btn svg {
+  display: block;
+  width: 2rem;
+  height: 2rem;
 }
 
 .cpg__page-btn:hover:not(.cpg__page-btn--disabled) {
-  opacity: 0.7;
+  border-color: #212120;
 }
 
 .cpg__page-btn--disabled {
-  opacity: 0.3;
   cursor: default;
-  pointer-events: none;
-}
-
-.cpg__page-arrow svg {
-  width: 2rem;
-  height: auto;
-}
-
-.cpg__page-arrow--left svg {
-  transform: scaleX(-1);
 }
 
 .cpg__page-nums {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
-  flex-wrap: wrap;
-  justify-content: center;
 }
 
 .cpg__page-num {
@@ -431,25 +424,33 @@
   height: 3.2rem;
   font-family: var(--font-body-family);
   font-size: 1.4rem;
-  line-height: 1;
+  font-weight: 500;
+  line-height: 1.82rem;
+  letter-spacing: 0;
   text-decoration: none;
   color: #9e9e98;
   transition: color 0.15s ease;
 }
 
 .cpg__page-num:hover {
-  color: rgb(var(--color-foreground));
+  color: #212120;
 }
 
 .cpg__page-num--active {
-  color: rgb(var(--color-foreground));
-  font-weight: 500;
+  color: #212120;
 }
 
+/* Figma DotsThree: three 2px squares, 3px apart, sitting on the text baseline */
 .cpg__page-num--ellipsis {
-  width: auto;
-  pointer-events: none;
-  color: #9e9e98;
+  align-items: flex-end;
+  gap: 0.3rem;
+  padding: 1rem 0.6rem;
+}
+
+.cpg__page-dot {
+  width: 0.2rem;
+  height: 0.2rem;
+  background-color: #9e9e98;
 }
 
 /* ── Filter overlay ── */

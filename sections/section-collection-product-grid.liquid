@@ -155,39 +155,56 @@
     </div>
 
     {%- if paginate.pages > 1 -%}
-      <div class="cpg__pagination">
+      {%- capture chevron_left -%}
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
+          <path d="M12.9167 4.16675L7.08337 10.0001L12.9167 15.8334" stroke="currentColor"/>
+        </svg>
+      {%- endcapture -%}
+      {%- capture chevron_right -%}
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
+          <path d="M7.08329 4.16675L12.9166 10.0001L7.08329 15.8334" stroke="currentColor"/>
+        </svg>
+      {%- endcapture -%}
+
+      <nav class="cpg__pagination" aria-label="{{ 'general.pagination.label' | t }}">
         {%- if paginate.previous -%}
-          <a href="{{ paginate.previous.url }}" class="cpg__page-btn cpg__page-btn--prev" aria-label="Previous page">
-            <span class="cpg__page-arrow cpg__page-arrow--left" aria-hidden="true">{{ 'icon-arrow.svg' | inline_asset_content }}</span>
+          <a href="{{ paginate.previous.url }}" class="cpg__page-btn" aria-label="{{ 'general.pagination.previous' | t }}">
+            {{- chevron_left -}}
           </a>
         {%- else -%}
-          <span class="cpg__page-btn cpg__page-btn--prev cpg__page-btn--disabled" aria-disabled="true">
-            <span class="cpg__page-arrow cpg__page-arrow--left" aria-hidden="true">{{ 'icon-arrow.svg' | inline_asset_content }}</span>
-          </span>
+          <span class="cpg__page-btn cpg__page-btn--disabled" aria-hidden="true">{{ chevron_left }}</span>
         {%- endif -%}
 
+        {%- assign current_page_str = paginate.current_page | append: '' -%}
         <div class="cpg__page-nums">
           {%- for part in paginate.parts -%}
+            {%- assign part_title_str = part.title | append: '' -%}
             {%- if part.is_link -%}
-              <a href="{{ part.url }}" class="cpg__page-num" aria-label="Page {{ part.title }}">{{ part.title }}</a>
-            {%- elsif part.title == '...' -%}
-              <span class="cpg__page-num cpg__page-num--ellipsis" aria-hidden="true">&hellip;</span>
+              <a href="{{ part.url }}" class="cpg__page-num" aria-label="{{ 'general.pagination.page' | t: number: part.title }}">
+                {{- part.title -}}
+              </a>
+            {%- elsif part_title_str == current_page_str -%}
+              <span class="cpg__page-num cpg__page-num--active" aria-current="page" aria-label="{{ 'general.pagination.page' | t: number: part.title }}">
+                {{- part.title -}}
+              </span>
             {%- else -%}
-              <span class="cpg__page-num cpg__page-num--active" aria-current="page">{{ part.title }}</span>
+              <span class="cpg__page-num cpg__page-num--ellipsis" aria-hidden="true">
+                <span class="cpg__page-dot"></span>
+                <span class="cpg__page-dot"></span>
+                <span class="cpg__page-dot"></span>
+              </span>
             {%- endif -%}
           {%- endfor -%}
         </div>
 
         {%- if paginate.next -%}
-          <a href="{{ paginate.next.url }}" class="cpg__page-btn cpg__page-btn--next" aria-label="Next page">
-            <span class="cpg__page-arrow cpg__page-arrow--right" aria-hidden="true">{{ 'icon-arrow.svg' | inline_asset_content }}</span>
+          <a href="{{ paginate.next.url }}" class="cpg__page-btn" aria-label="{{ 'general.pagination.next' | t }}">
+            {{- chevron_right -}}
           </a>
         {%- else -%}
-          <span class="cpg__page-btn cpg__page-btn--next cpg__page-btn--disabled" aria-disabled="true">
-            <span class="cpg__page-arrow cpg__page-arrow--right" aria-hidden="true">{{ 'icon-arrow.svg' | inline_asset_content }}</span>
-          </span>
+          <span class="cpg__page-btn cpg__page-btn--disabled" aria-hidden="true">{{ chevron_right }}</span>
         {%- endif -%}
-      </div>
+      </nav>
     {%- endif -%}
   {%- endpaginate -%}
 
