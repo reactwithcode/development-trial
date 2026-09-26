@@ -49,8 +49,8 @@
         "t-shirts": {
           "type": "filter_item",
           "settings": {
-            "label": "T Shirts",
-            "filter_value": "T Shirts"
+            "label": "T-Shirts",
+            "filter_value": "T-Shirts"
           }
         },
         "shorts": {
