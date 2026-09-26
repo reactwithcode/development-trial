@@ -73,6 +73,13 @@
             "label": "Sunglasses",
             "filter_value": "Sunglasses"
           }
+        },
+        "filter_item_adzbAc": {
+          "type": "filter_item",
+          "settings": {
+            "label": "Shoes",
+            "filter_value": "Shoes"
+          }
         }
       },
       "block_order": [
@@ -83,7 +90,8 @@
         "t-shirts",
         "shorts",
         "quarter-zips",
-        "footwear"
+        "footwear",
+        "filter_item_adzbAc"
       ],
       "settings": {
         "filter_param": "filter.p.product_type",
