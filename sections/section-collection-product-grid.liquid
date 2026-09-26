@@ -105,8 +105,19 @@
           if product.tags contains 'new-in'
             assign is_new_in = true
           endif
+          # product.total_inventory is Admin-API only; in Liquid, sum tracked variants instead.
+          # Oversold variants (negative stock when "continue selling" is on) count as 0.
+          assign tracked_inventory = 0
+          assign has_tracked_variant = false
+          for variant in product.variants
+            if variant.inventory_management != blank
+              assign has_tracked_variant = true
+              assign variant_stock = variant.inventory_quantity | at_least: 0
+              assign tracked_inventory = tracked_inventory | plus: variant_stock
+            endif
+          endfor
           assign is_low_stock = false
-          if product.total_inventory > 0 and product.total_inventory <= 5
+          if has_tracked_variant and tracked_inventory > 0 and tracked_inventory <= 5
             assign is_low_stock = true
           endif
         -%}
@@ -153,7 +164,7 @@
               </div>
             {%- elsif is_low_stock -%}
               <div class="cpg__badge cpg__badge--strip" aria-label="Low stock">
-                <span class="cpg__badge-icon" aria-hidden="true">{{ 'icon-fire.svg' | inline_asset_content }}</span>
+                <span class="cpg__badge-icon" aria-hidden="true">{{ 'icon-fire-solid.svg' | inline_asset_content }}</span>
                 <span class="cpg__badge-text">LOW STOCK</span>
               </div>
             {%- endif -%}
