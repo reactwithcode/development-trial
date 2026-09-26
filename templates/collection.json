@@ -70,8 +70,8 @@
         "footwear": {
           "type": "filter_item",
           "settings": {
-            "label": "Footwear",
-            "filter_value": "Footwear"
+            "label": "Sunglasses",
+            "filter_value": "Sunglasses"
           }
         }
       },
