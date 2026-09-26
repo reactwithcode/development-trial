@@ -49,13 +49,19 @@
 .cpg__toolbar-right {
   display: flex;
   align-items: center;
-  gap: 1.6rem;
+  gap: 0.8rem;
+}
+
+@media screen and (min-width: 750px) {
+  .cpg__toolbar-right {
+    gap: 1.6rem;
+  }
 }
 
 .cpg__count {
   font-family: var(--font-body-family);
   font-size: 1.2rem;
-  line-height: 1.6rem;
+  line-height: 1.68rem;
   color: #6f6f6a;
   white-space: nowrap;
 }
@@ -63,62 +69,57 @@
 @media screen and (min-width: 750px) {
   .cpg__count {
     font-size: 1.4rem;
+    line-height: 1.82rem;
   }
 }
 
+/* ── Sort ──
+   Figma: "Sort by" + 16px chevron, no visible value. The select is stretched over
+   the label and made transparent, so the whole control is the tap target. */
 .cpg__sort-wrap {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 0.8rem;
+  gap: 0.4rem;
 }
 
 .cpg__sort-label {
   font-family: var(--font-body-family);
   font-size: 1.4rem;
   font-weight: 500;
-  line-height: 2rem;
-  color: rgb(var(--color-foreground));
+  line-height: 1.82rem;
+  color: #212120;
   white-space: nowrap;
 }
 
-.cpg__sort-select-wrap {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.cpg__sort-select {
-  appearance: none;
-  -webkit-appearance: none;
-  background: none;
-  border: none;
-  padding: 0 2rem 0 0;
-  font-family: var(--font-body-family);
-  font-weight: 500;
-  font-size: 1.4rem;
-  line-height: 2rem;
-  color: rgb(var(--color-foreground));
-  cursor: pointer;
-  max-width: 16rem;
-}
-
-.cpg__sort-select:focus-visible {
-  outline: 0.2rem solid rgba(var(--color-foreground), 0.5);
-  outline-offset: 0.3rem;
-}
-
 .cpg__sort-chevron {
-  position: absolute;
-  right: 0;
-  pointer-events: none;
   display: flex;
   align-items: center;
-  color: rgb(var(--color-foreground));
+  color: #212120;
 }
 
 .cpg__sort-chevron svg {
-  width: 1rem;
-  height: 0.6rem;
+  width: 1.6rem;
+  height: 1.6rem;
+}
+
+.cpg__sort-select {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+  /* 16px stops iOS Safari zooming in when the picker opens */
+  font-size: 1.6rem;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.cpg__sort-wrap:has(.cpg__sort-select:focus-visible) {
+  outline: 0.2rem solid rgba(33, 33, 32, 0.5);
+  outline-offset: 0.3rem;
 }
 
 /* ── Active filter chips ── */

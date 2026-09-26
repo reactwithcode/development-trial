@@ -42,26 +42,32 @@
 
       <div class="cpg__toolbar-right">
         <span class="cpg__count">{{ 'products.facets.product_count_simple' | t: count: collection.products_count }}</span>
+        {%- comment -%}
+          Figma shows only "Sort by" + chevron. The native select sits invisibly on top of it,
+          so it still opens the device's own picker and announces the current choice.
+        {%- endcomment -%}
         <div class="cpg__sort-wrap">
-          <label class="cpg__sort-label" for="cpg-sort-{{ section.id }}">Sort by</label>
-          <div class="cpg__sort-select-wrap">
-            <select
-              class="cpg__sort-select"
-              id="cpg-sort-{{ section.id }}"
-              name="sort_by"
-              data-cpg-sort
-            >
-              {%- for option in collection.sort_options -%}
-                <option
-                  value="{{ option.value }}"
-                  {%- if option.value == sort_by %} selected{%- endif -%}
-                >{{ option.name }}</option>
-              {%- endfor -%}
-            </select>
-            <span class="cpg__sort-chevron" aria-hidden="true">
-              {{ 'icon-caret.svg' | inline_asset_content }}
-            </span>
-          </div>
+          <label class="cpg__sort-label" for="cpg-sort-{{ section.id }}">
+            {{- 'products.facets.sort_by' | t -}}
+          </label>
+          <span class="cpg__sort-chevron" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 20 20" fill="none" focusable="false">
+              <path d="M4.16675 7.08337L10.0001 12.9167L15.8334 7.08337" stroke="currentColor"/>
+            </svg>
+          </span>
+          <select
+            class="cpg__sort-select"
+            id="cpg-sort-{{ section.id }}"
+            name="sort_by"
+            data-cpg-sort
+          >
+            {%- for option in collection.sort_options -%}
+              <option
+                value="{{ option.value }}"
+                {%- if option.value == sort_by %} selected{%- endif -%}
+              >{{ option.name }}</option>
+            {%- endfor -%}
+          </select>
         </div>
       </div>
     </div>
