@@ -13,18 +13,6 @@
   "sections": {
     "announcement-bar": {
       "type": "announcement-bar",
-      "blocks": {
-        "announcement-bar-0": {
-          "type": "announcement",
-          "settings": {
-            "text": "Welcome to our store",
-            "link": ""
-          }
-        }
-      },
-      "block_order": [
-        "announcement-bar-0"
-      ],
       "settings": {
         "auto_rotate": false,
         "change_slides_speed": 5,
@@ -37,6 +25,7 @@
     },
     "header": {
       "type": "header",
+      "disabled": true,
       "settings": {
         "logo_position": "middle-left",
         "mobile_logo_position": "center",
@@ -52,10 +41,25 @@
         "padding_top": 20,
         "padding_bottom": 20
       }
+    },
+    "section_custom_header_dQnm8U": {
+      "type": "section-custom-header",
+      "name": "Custom Header",
+      "settings": {
+        "menu": "main-menu",
+        "color_scheme": "",
+        "show_featured_item": true,
+        "featured_item_text": "Black Friday Sale",
+        "featured_item_url": "",
+        "show_account": true,
+        "show_wishlist": true,
+        "show_currency_selector": true
+      }
     }
   },
   "order": [
     "announcement-bar",
-    "header"
+    "header",
+    "section_custom_header_dQnm8U"
   ]
 }

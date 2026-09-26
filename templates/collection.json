@@ -88,8 +88,8 @@
       "settings": {
         "filter_param": "filter.p.product_type",
         "color_scheme": "scheme-1",
-        "padding_top": 12,
-        "padding_bottom": 12
+        "padding_top": 0,
+        "padding_bottom": 0
       }
     },
     "product-grid": {
