@@ -127,6 +127,7 @@
     "cart_drawer_collection": "",
     "cart_color_scheme": "scheme-1",
     "customer_account_menu": "customer-account-main-menu",
+    "gift_wrap_product_handle": "gift-wrap",
     "sections": {
       "main-password-header": {
         "type": "main-password-header",

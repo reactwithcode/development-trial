@@ -20,6 +20,10 @@
           "type": "price",
           "settings": {}
         },
+        "description_YqPhmN": {
+          "type": "description",
+          "settings": {}
+        },
         "judge_me_reviews_preview_badge_iXMd4q": {
           "type": "shopify://apps/judge-me-reviews/blocks/preview_badge/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
           "settings": {}
@@ -28,31 +32,25 @@
           "type": "variant_picker",
           "settings": {
             "picker_type": "button",
-            "swatch_shape": "circle"
+            "swatch_shape": "circle",
+            "size_chart_option": "Size"
           }
         },
         "buy_buttons": {
           "type": "buy_buttons",
           "settings": {
+            "stock_threshold": 20,
             "show_dynamic_checkout": false,
-            "show_gift_card_recipient": true,
-            "stock_threshold": 20
+            "show_gift_card_recipient": true
           }
-        },
-        "description": {
-          "type": "description",
-          "settings": {}
-        },
-        "rating": {
-          "type": "rating",
-          "settings": {}
         },
         "accordion_features": {
           "type": "collapsible_tab",
           "settings": {
             "heading": "Features",
             "icon": "none",
-            "content": "{{ product.metafields.custom.features | metafield_tag }}"
+            "content": "{{ product.metafields.custom.features | metafield_tag }}",
+            "page": ""
           }
         },
         "accordion_care": {
@@ -60,7 +58,8 @@
           "settings": {
             "heading": "Care",
             "icon": "none",
-            "content": "{{ product.metafields.custom.care | metafield_tag }}"
+            "content": "{{ product.metafields.custom.care | metafield_tag }}",
+            "page": ""
           }
         },
         "accordion_shipping": {
@@ -68,7 +67,8 @@
           "settings": {
             "heading": "Shipping",
             "icon": "none",
-            "content": "{{ product.metafields.custom.shipping | metafield_tag }}"
+            "content": "{{ product.metafields.custom.shipping | metafield_tag }}",
+            "page": ""
           }
         },
         "accordion_returns": {
@@ -76,7 +76,8 @@
           "settings": {
             "heading": "Returns",
             "icon": "none",
-            "content": "{{ product.metafields.custom.returns | metafield_tag }}"
+            "content": "{{ product.metafields.custom.returns | metafield_tag }}",
+            "page": ""
           }
         },
         "accordion_size_guide": {
@@ -84,17 +85,26 @@
           "settings": {
             "heading": "Size guide",
             "icon": "none",
-            "content": "{{ product.metafields.custom.size_guide | metafield_tag }}"
+            "content": "{{ product.metafields.custom.size_guide | metafield_tag }}",
+            "page": ""
           }
         },
         "usp_cards": {
           "type": "usp_cards",
-          "settings": {}
+          "settings": {
+            "icon_1": "heart",
+            "heading_1": "International delivery",
+            "text_1": "Delivered to your door, worldwide",
+            "icon_2": "gift",
+            "heading_2": "Loyalty rewards",
+            "text_2": "Earn points on every order"
+          }
         }
       },
       "block_order": [
         "title",
         "price",
+        "description_YqPhmN",
         "judge_me_reviews_preview_badge_iXMd4q",
         "variant_picker",
         "buy_buttons",
@@ -106,6 +116,7 @@
         "usp_cards"
       ],
       "settings": {
+        "show_breadcrumbs": true,
         "enable_sticky_info": true,
         "color_scheme": "scheme-1",
         "media_size": "medium",
