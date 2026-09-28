@@ -172,7 +172,7 @@
 
 @media (min-width: 990px) {
   .product-info-stack.product__info-container > * + * {
-    margin-top: 4rem;
+    margin-top: 1rem;
   }
 }
 
