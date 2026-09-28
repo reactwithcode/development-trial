@@ -167,11 +167,20 @@
 
 .product-info-stack.product__info-container > * + * {
   margin-bottom: 0px;
+  margin-top: 3.2rem;
+}
+
+.product-star-review-info-stack.product__info-container > * + * {
+  margin-bottom: 0px;
   margin-top: 1rem;
 }
 
 @media (min-width: 990px) {
   .product-info-stack.product__info-container > * + * {
+    margin-top: 4rem;
+  }
+
+  .product-star-review-info-stack.product__info-container > * + * {
     margin-top: 1rem;
   }
 }
