@@ -167,7 +167,7 @@
 
 .product-info-stack.product__info-container > * + * {
   margin-bottom: 0px;
-  margin-top: 3.2rem;
+  margin-top: 1rem;
 }
 
 @media (min-width: 990px) {
