@@ -190,6 +190,12 @@
   margin-top: 1.6rem;
 }
 
+/* Judge.me star badge is an app block, so it can't take data-stack-gap; keep it close to the price. */
+
+.product-info-stack.product__info-container > .shopify-app-block:has(.jdgm-preview-badge) {
+  margin-top: 1rem;
+}
+
 .product-info-stack.product__info-container > .product__accordion + .product__accordion {
   margin-top: 0px;
 }

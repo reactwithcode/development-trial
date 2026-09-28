@@ -49,6 +49,11 @@
     @apply tw-mt-4;
   }
 
+  /* Judge.me star badge is an app block, so it can't take data-stack-gap; keep it close to the price. */
+  .product-info-stack.product__info-container > .shopify-app-block:has(.jdgm-preview-badge) {
+    @apply tw-mt-4;
+  }
+
   .product-info-stack.product__info-container > .product__accordion + .product__accordion {
     @apply tw-mt-0;
   }
