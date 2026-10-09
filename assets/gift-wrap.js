@@ -11,6 +11,18 @@
     return properties;
   };
 
+  // Shared by both orphan cleanups: removes every given line in one request (/cart/update.js accepts
+  // line item keys) instead of one /cart/change.js call per line, and returns the updated cart.
+  const removeCartLines = async (keys) => {
+    const res = await fetch('/cart/update.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ updates: Object.fromEntries(keys.map((key) => [key, 0])) }),
+    });
+    if (!res.ok) throw new Error('Failed to remove orphaned gift wrap');
+    return res.json();
+  };
+
   // Shared by both components: updates the live "count / limit" next to a gift wrap field.
   const updateGiftWrapCounter = (input) => {
     const counter = input.closest('[data-gift-wrap-field]')?.querySelector('[data-gift-wrap-counter]');
@@ -216,18 +228,13 @@
 
           this.isCleaningUp = true;
           try {
-            for (const orphan of orphans) {
-              await fetch('/cart/change.js', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ id: orphan.key, quantity: 0 }),
-              });
-            }
-            const updatedCart = await fetch('/cart.js').then((r) => r.json());
+            const updatedCart = await removeCartLines(orphans.map((orphan) => orphan.key));
             publish(PUB_SUB_EVENTS.cartUpdate, {
               source: 'gift-wrap-cleanup',
               cartData: updatedCart,
             });
+          } catch (e) {
+            console.warn('[Gift Wrap] Could not remove orphaned gift wrap:', e.message);
           } finally {
             this.isCleaningUp = false;
           }
@@ -400,24 +407,12 @@
         }
 
         async removeOrphans(keys) {
-          for (const key of keys) {
-            try {
-              // Another cleanup (e.g. the PDP's) may already have removed this line; a failed request is fine.
-              await fetch('/cart/change.js', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ id: key, quantity: 0 }),
-              });
-            } catch (e) {
-              console.warn('[Gift Wrap] Could not remove orphaned gift wrap:', e.message);
-            }
-          }
-
           try {
-            const cartData = await fetch('/cart.js').then((r) => r.json());
+            const cartData = await removeCartLines(keys);
             publish(PUB_SUB_EVENTS.cartUpdate, { source: 'gift-wrap-cleanup', cartData });
           } catch (e) {
-            console.error('[Gift Wrap]', e.message);
+            // Another cleanup (e.g. the PDP's) may already have removed these lines; a failed request is fine.
+            console.warn('[Gift Wrap] Could not remove orphaned gift wrap:', e.message);
           }
         }
       }
